@@ -1,0 +1,15 @@
+[submodule "ros2_ws/src/submodules/micro-ROS-Agent"]
+	path = ros2_ws/src/submodules/micro-ROS-Agent
+	url = https://github.com/micro-ROS/micro-ROS-Agent.git
+[submodule "ros2_ws/src/submodules/micro_ros_msgs"]
+	path = ros2_ws/src/submodules/micro_ros_msgs
+	url = https://github.com/micro-ROS/micro_ros_msgs.git
+[submodule "ros2_ws/src/submodules/micro_ros_setup"]
+	path = ros2_ws/src/submodules/micro_ros_setup
+	url = https://github.com/micro-ROS/micro_ros_setup.git
+[submodule "ros2_ws/src/submodules/ros2_shared"]
+	path = ros2_ws/src/submodules/ros2_shared
+	url = https://github.com/ptrmu/ros2_shared.git
+[submodule "ros2_ws/src/submodules/ros2_usb_camera"]
+	path = ros2_ws/src/submodules/ros2_usb_camera
+	url = https://github.com/klintan/ros2_usb_camera.git
