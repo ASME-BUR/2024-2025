@@ -1,0 +1,21 @@
+<?xml version="1.0">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bur">
+  <!-- Arguments -->
+  <xacro:arg name="namespace" default="bur"/>
+
+  <xacro:arg name="simulation" default="true"/>
+  <xacro:arg name="density" default="1000"/>
+
+  <xacro:property name="ns" value="$(arg namespace)"/>
+  <xacro:property name="density" value="$(arg density)"/>
+
+  <!-- Import modules -->
+  <xacro:include filename="thrusters.xacro"/>
+
+  <!-- Dimensions -->
+  <xacro:property name="x_size" value="0.40"/>
+  <xacro:property name="y_size" value="0.80"/>
+  <xacro:property name="z_size" value="0.40"/>
+
+
+</robot>
