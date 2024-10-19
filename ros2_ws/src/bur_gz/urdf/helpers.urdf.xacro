@@ -1,0 +1,26 @@
+<?xml version="1.0">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bur">
+
+  <xacro:macro name="gen_box" params="name x y z">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <box size="${x} ${y} ${z}" />
+        </geometry>
+        <material name="yellow" />
+      </visual>
+
+      <collision>
+        <geometry>
+          <box size="${x} ${y} ${z}" />
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="500.0"/>
+        <inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="100" />
+      </inertial>
+    </link>
+  </xacro:macro>
+
+</robot>
