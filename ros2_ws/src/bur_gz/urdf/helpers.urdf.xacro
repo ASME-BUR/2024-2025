@@ -1,6 +1,7 @@
-<?xml version="1.0">
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bur">
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <!-- Helper methods -->
   <xacro:macro name="gen_box" params="name x y z">
     <link name="${name}">
       <visual>
