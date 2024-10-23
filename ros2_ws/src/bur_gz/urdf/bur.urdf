@@ -20,7 +20,7 @@
   <link name="bur/base_link">
     <inertial>
       <mass value="14.8"/>
-      <origin xyz="0 0 -0.198662666037456"/>
+      <origin xyz="0 0 -0.12514963738441306"/>
       <!-- BlueROV2 values from "Model Predictive Control for the BlueROV2",
            Emil Már Einarsson, Andris Lipenitis, Master thesis, 2020
            for now make Ignition crash?-->
@@ -34,14 +34,15 @@
     </inertial>
     <visual>
       <geometry>
-        <box size="0.198662666037456 0.397325332074912 0.198662666037456"/>
+        <box size="0.25029927476882613 0.5005985495376523 0.12514963738441306"/>
       </geometry>
+      <material name="grey"/>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.049665666509364"/>
+      <origin xyz="0 0 -0.031287409346103266"/>
       <!-- Box adjusted for buoyancy -->
       <geometry>
-        <box size="0.198662666037456 0.397325332074912 0.198662666037456"/>
+        <box size="0.25029927476882613 0.5005985495376523 0.12514963738441306"/>
       </geometry>
     </collision>
     <!--    <gazebo>
@@ -56,6 +57,7 @@
       <geometry>
         <cylinder length="0.035" radius="0.05"/>
       </geometry>
+      <material name="yellow"/>
     </visual>
     <collision>
       <origin rpy="0 1.5707963267948966 0"/>
@@ -71,8 +73,8 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster1" type="continuous">
-    <origin rpy="0 0 0.7853981634" xyz="0.1355 -0.1 -0.0725"/>
+  <joint name="thruster1" type="fixed">
+    <origin rpy="0 0 0.7853981634" xyz="0.1555 -0.15 -0.0725"/>
     <axis xyz="1 0 0"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster1"/>
@@ -85,6 +87,321 @@
       <namespace>bur</namespace>
       <joint_name>thruster1</joint_name>
       <topic>thruster1/cmd</topic>
+      <thrust_coefficient>0.011</thrust_coefficient>
+      <fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter>
+      <velocity_control>true</velocity_control>
+      <use_angvel_cmd>false</use_angvel_cmd>
+      <max_thrust_cmd>40</max_thrust_cmd>
+      <min_thrust_cmd>-40</min_thrust_cmd>
+    </plugin>
+  </gazebo>
+  <!--  </xacro:if> -->
+  <link name="bur/thruster2">
+    <visual>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+      <material name="yellow"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0"/>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- thruster axis is X -->
+      <origin rpy="0 0 0" xyz="0.0175 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="8.750000000000001e-05" ixy="0.0" ixz="0.0" iyy="5.089583333333334e-05" iyz="0.0" izz="5.089583333333334e-05"/>
+    </inertial>
+  </link>
+  <!-- Joint between thruster link and vehicle base link -->
+  <joint name="thruster2" type="fixed">
+    <origin rpy="0 0 0.7853981634" xyz="0.1555 0.15 -0.0725"/>
+    <axis xyz="1 0 0"/>
+    <parent link="bur/base_link"/>
+    <child link="bur/thruster2"/>
+    <limits effort="-1" velocity="-1"/>
+  </joint>
+  <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
+  <!--    <xacro:if value="$(arg simulation)"> -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>bur</namespace>
+      <joint_name>thruster2</joint_name>
+      <topic>thruster2/cmd</topic>
+      <thrust_coefficient>0.011</thrust_coefficient>
+      <fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter>
+      <velocity_control>true</velocity_control>
+      <use_angvel_cmd>false</use_angvel_cmd>
+      <max_thrust_cmd>40</max_thrust_cmd>
+      <min_thrust_cmd>-40</min_thrust_cmd>
+    </plugin>
+  </gazebo>
+  <!--  </xacro:if> -->
+  <link name="bur/thruster3">
+    <visual>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+      <material name="yellow"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0"/>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- thruster axis is X -->
+      <origin rpy="0 0 0" xyz="0.0175 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="8.750000000000001e-05" ixy="0.0" ixz="0.0" iyy="5.089583333333334e-05" iyz="0.0" izz="5.089583333333334e-05"/>
+    </inertial>
+  </link>
+  <!-- Joint between thruster link and vehicle base link -->
+  <joint name="thruster3" type="fixed">
+    <origin rpy="0 0 0.7853981634" xyz="-0.1555 -0.15 -0.0725"/>
+    <axis xyz="1 0 0"/>
+    <parent link="bur/base_link"/>
+    <child link="bur/thruster3"/>
+    <limits effort="-1" velocity="-1"/>
+  </joint>
+  <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
+  <!--    <xacro:if value="$(arg simulation)"> -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>bur</namespace>
+      <joint_name>thruster3</joint_name>
+      <topic>thruster3/cmd</topic>
+      <thrust_coefficient>0.011</thrust_coefficient>
+      <fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter>
+      <velocity_control>true</velocity_control>
+      <use_angvel_cmd>false</use_angvel_cmd>
+      <max_thrust_cmd>40</max_thrust_cmd>
+      <min_thrust_cmd>-40</min_thrust_cmd>
+    </plugin>
+  </gazebo>
+  <!--  </xacro:if> -->
+  <link name="bur/thruster4">
+    <visual>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+      <material name="yellow"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0"/>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- thruster axis is X -->
+      <origin rpy="0 0 0" xyz="0.0175 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="8.750000000000001e-05" ixy="0.0" ixz="0.0" iyy="5.089583333333334e-05" iyz="0.0" izz="5.089583333333334e-05"/>
+    </inertial>
+  </link>
+  <!-- Joint between thruster link and vehicle base link -->
+  <joint name="thruster4" type="fixed">
+    <origin rpy="0 0 0.7853981634" xyz="-0.1555 0.15 -0.0725"/>
+    <axis xyz="1 0 0"/>
+    <parent link="bur/base_link"/>
+    <child link="bur/thruster4"/>
+    <limits effort="-1" velocity="-1"/>
+  </joint>
+  <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
+  <!--    <xacro:if value="$(arg simulation)"> -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>bur</namespace>
+      <joint_name>thruster4</joint_name>
+      <topic>thruster4/cmd</topic>
+      <thrust_coefficient>0.011</thrust_coefficient>
+      <fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter>
+      <velocity_control>true</velocity_control>
+      <use_angvel_cmd>false</use_angvel_cmd>
+      <max_thrust_cmd>40</max_thrust_cmd>
+      <min_thrust_cmd>-40</min_thrust_cmd>
+    </plugin>
+  </gazebo>
+  <!--  </xacro:if> -->
+  <link name="bur/thruster5">
+    <visual>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0"/>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- thruster axis is X -->
+      <origin rpy="0 0 0" xyz="0.0175 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="8.750000000000001e-05" ixy="0.0" ixz="0.0" iyy="5.089583333333334e-05" iyz="0.0" izz="5.089583333333334e-05"/>
+    </inertial>
+  </link>
+  <!-- Joint between thruster link and vehicle base link -->
+  <joint name="thruster5" type="fixed">
+    <origin rpy="-0.7853981633974483 1.5707963267948966 0" xyz="0.13333333333333333 -0.26666666666666666 0"/>
+    <axis xyz="1 0 0"/>
+    <parent link="bur/base_link"/>
+    <child link="bur/thruster5"/>
+    <limits effort="-1" velocity="-1"/>
+  </joint>
+  <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
+  <!--    <xacro:if value="$(arg simulation)"> -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>bur</namespace>
+      <joint_name>thruster5</joint_name>
+      <topic>thruster5/cmd</topic>
+      <thrust_coefficient>0.011</thrust_coefficient>
+      <fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter>
+      <velocity_control>true</velocity_control>
+      <use_angvel_cmd>false</use_angvel_cmd>
+      <max_thrust_cmd>40</max_thrust_cmd>
+      <min_thrust_cmd>-40</min_thrust_cmd>
+    </plugin>
+  </gazebo>
+  <!--  </xacro:if> -->
+  <link name="bur/thruster6">
+    <visual>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0"/>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- thruster axis is X -->
+      <origin rpy="0 0 0" xyz="0.0175 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="8.750000000000001e-05" ixy="0.0" ixz="0.0" iyy="5.089583333333334e-05" iyz="0.0" izz="5.089583333333334e-05"/>
+    </inertial>
+  </link>
+  <!-- Joint between thruster link and vehicle base link -->
+  <joint name="thruster6" type="fixed">
+    <origin rpy="0.7853981633974483 1.5707963267948966 0" xyz="0.13333333333333333 0.26666666666666666 0"/>
+    <axis xyz="1 0 0"/>
+    <parent link="bur/base_link"/>
+    <child link="bur/thruster6"/>
+    <limits effort="-1" velocity="-1"/>
+  </joint>
+  <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
+  <!--    <xacro:if value="$(arg simulation)"> -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>bur</namespace>
+      <joint_name>thruster6</joint_name>
+      <topic>thruster6/cmd</topic>
+      <thrust_coefficient>0.011</thrust_coefficient>
+      <fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter>
+      <velocity_control>true</velocity_control>
+      <use_angvel_cmd>false</use_angvel_cmd>
+      <max_thrust_cmd>40</max_thrust_cmd>
+      <min_thrust_cmd>-40</min_thrust_cmd>
+    </plugin>
+  </gazebo>
+  <!--  </xacro:if> -->
+  <link name="bur/thruster7">
+    <visual>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0"/>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- thruster axis is X -->
+      <origin rpy="0 0 0" xyz="0.0175 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="8.750000000000001e-05" ixy="0.0" ixz="0.0" iyy="5.089583333333334e-05" iyz="0.0" izz="5.089583333333334e-05"/>
+    </inertial>
+  </link>
+  <!-- Joint between thruster link and vehicle base link -->
+  <joint name="thruster7" type="fixed">
+    <origin rpy="0.7853981633974483 1.5707963267948966 0" xyz="-0.13333333333333333 -0.26666666666666666 0"/>
+    <axis xyz="1 0 0"/>
+    <parent link="bur/base_link"/>
+    <child link="bur/thruster7"/>
+    <limits effort="-1" velocity="-1"/>
+  </joint>
+  <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
+  <!--    <xacro:if value="$(arg simulation)"> -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>bur</namespace>
+      <joint_name>thruster7</joint_name>
+      <topic>thruster7/cmd</topic>
+      <thrust_coefficient>0.011</thrust_coefficient>
+      <fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter>
+      <velocity_control>true</velocity_control>
+      <use_angvel_cmd>false</use_angvel_cmd>
+      <max_thrust_cmd>40</max_thrust_cmd>
+      <min_thrust_cmd>-40</min_thrust_cmd>
+    </plugin>
+  </gazebo>
+  <!--  </xacro:if> -->
+  <link name="bur/thruster8">
+    <visual>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0"/>
+      <geometry>
+        <cylinder length="0.035" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- thruster axis is X -->
+      <origin rpy="0 0 0" xyz="0.0175 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="8.750000000000001e-05" ixy="0.0" ixz="0.0" iyy="5.089583333333334e-05" iyz="0.0" izz="5.089583333333334e-05"/>
+    </inertial>
+  </link>
+  <!-- Joint between thruster link and vehicle base link -->
+  <joint name="thruster8" type="fixed">
+    <origin rpy="-0.7853981633974483 1.5707963267948966 0" xyz="-0.13333333333333333 0.26666666666666666 0"/>
+    <axis xyz="1 0 0"/>
+    <parent link="bur/base_link"/>
+    <child link="bur/thruster8"/>
+    <limits effort="-1" velocity="-1"/>
+  </joint>
+  <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
+  <!--    <xacro:if value="$(arg simulation)"> -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>bur</namespace>
+      <joint_name>thruster8</joint_name>
+      <topic>thruster8/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
       <propeller_diameter>0.1</propeller_diameter>

@@ -1,10 +1,13 @@
 import os
 
+# TODO Consider upgrading from this
 from setuptools import find_packages, setup
 from glob import glob
 
 # Iterate through all the files and subdirectories
 # to build the data files array
+#
+# Might be necessary for game objects (keep for now)
 def generate_data_files(share_path, dir):
     data_files = []
 
@@ -32,7 +35,7 @@ setup(
         # ('share/' + package_name + '/worlds/', glob('worlds/*')),
         # ('share/' + package_name + '/meshes/visual', glob('meshes/visual/*')),
         ('share/' + package_name + '/rviz/', glob('rviz/*')),
-    ] + generate_data_files('share/' + package_name + '/', 'models'),
+    ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='root',
