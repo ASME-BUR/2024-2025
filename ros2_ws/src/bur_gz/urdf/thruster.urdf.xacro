@@ -39,11 +39,10 @@
     </link>
 
     <!-- Joint between thruster link and vehicle base link -->
-    <joint name="thruster${thruster_id}" type="continuous">
+    <joint name="thruster${thruster_id}" type="fixed">
       <xacro:insert_block name="origin" />
       <axis xyz="1 0 0" />
-      <!-- parent link="${ns}/base_link" /-->
-      <parent link="base_link" />
+      <parent link="${ns}/base_link">
       <child link="${ns}/thruster${thruster_id}" />
       <limits effort="-1" velocity="-1"/>
     </joint>
