@@ -33,8 +33,7 @@
   <!-- Center of gravity -->
   <xacro:property name="z_cog" value="${-buoyant_correction*z_size}"/>
 
-  <!-- link name="${ns}/base_link" -->
-  <link name="base_link">
+  <link name="${ns}/base_link">
     <inertial>
       <mass value="${mass}"/>
       <origin xyz="0 0 ${z_cog}"/>
