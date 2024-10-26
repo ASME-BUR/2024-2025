@@ -30,9 +30,9 @@ Thruster_manager::Thruster_manager() : rclcpp::Node("thruster_manager")
 
     wrench_sub = this->create_subscription<geometry_msgs::msg::WrenchStamped>(
         this->get_parameter("wrench_sub_topic").as_string(), 1, std::bind(&Thruster_manager::wrench_Callback, this, _1));
-    cmd_sub = this->create_subscription<bur_rov_msgs::msg::Command>(
+    cmd_sub = this->create_subscription<bur_msgs::msg::Command>(
         this->get_parameter("cmd_sub_topic").as_string(), 1, std::bind(&Thruster_manager::cmd_Callback, this, _1));
-    cmd_pub = this->create_publisher<bur_rov_msgs::msg::ThrusterCommand>(
+    cmd_pub = this->create_publisher<bur_msgs::msg::ThrusterCommand>(
         this->get_parameter("thrust_cmd_pub_topic").as_string(), 1);
     test_mode = this->get_parameter("test_mode").as_bool();
 
@@ -80,7 +80,7 @@ void Thruster_manager::setVariables()
     flip_motors = this->get_parameter("flip_motors").as_double_array();
 }
 
-void Thruster_manager::cmd_Callback(const bur_rov_msgs::msg::Command::SharedPtr msg)
+void Thruster_manager::cmd_Callback(const bur_msgs::msg::Command::SharedPtr msg)
 {
     this->output.auxilary.clear();
     this->output.buttons.clear();

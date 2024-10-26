@@ -13,7 +13,7 @@ namespace controller
     this->declare_parameter("use_command_target", false);
     this->declare_parameter("using_joy", true);
 
-    state_setpoint_sub = this->create_subscription<bur_rov_msgs::msg::Command>(
+    state_setpoint_sub = this->create_subscription<bur_msgs::msg::Command>(
         this->get_parameter("sub_topic").as_string(), 1,
         std::bind(&ControllerNode::currentCommandCallback, this, std::placeholders::_1));
 
@@ -93,7 +93,7 @@ namespace controller
     return result;
   }
 
-  void ControllerNode::currentCommandCallback(const bur_rov_msgs::msg::Command::SharedPtr msg)
+  void ControllerNode::currentCommandCallback(const bur_msgs::msg::Command::SharedPtr msg)
   {
     pose_state = msg->current_pos.pose;
     pose_setpoint = msg->target_pos.pose;

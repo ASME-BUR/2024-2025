@@ -27,8 +27,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-#include "bur_rov_msgs/msg/thruster_command.hpp"
-#include "bur_rov_msgs/msg/command.hpp"
+#include "bur_msgs/msg/thruster_command.hpp"
+#include "bur_msgs/msg/command.hpp"
 #include "geometry_msgs/msg/wrench_stamped.hpp"
 #include "utilities/common_functions.hpp"
 // #include <eigen3/Dense>
@@ -67,12 +67,12 @@ private:
     void allocate_generic_motors(std::map<std::string, double> &des_forces, std::vector<double> &des_motor_thrusts);
     double rateLimitMotorCommand(double new_command, double last_command) const;
     void wrench_Callback(const geometry_msgs::msg::WrenchStamped::SharedPtr msg);
-    void cmd_Callback(const bur_rov_msgs::msg::Command::SharedPtr msg);
+    void cmd_Callback(const bur_msgs::msg::Command::SharedPtr msg);
     // Ros stuff
     rclcpp::Subscription<geometry_msgs::msg::WrenchStamped>::SharedPtr wrench_sub;
-    rclcpp::Subscription<bur_rov_msgs::msg::Command>::SharedPtr cmd_sub;
-    rclcpp::Publisher<bur_rov_msgs::msg::ThrusterCommand>::SharedPtr cmd_pub;
-    bur_rov_msgs::msg::ThrusterCommand output;
+    rclcpp::Subscription<bur_msgs::msg::Command>::SharedPtr cmd_sub;
+    rclcpp::Publisher<bur_msgs::msg::ThrusterCommand>::SharedPtr cmd_pub;
+    bur_msgs::msg::ThrusterCommand output;
 
     // Variables
     map<int, std::map<std::string, double>> motors;

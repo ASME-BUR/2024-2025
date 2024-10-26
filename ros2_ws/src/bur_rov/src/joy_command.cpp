@@ -16,7 +16,7 @@ JoyCommand::JoyCommand() : rclcpp::Node("joy_command")
     this->declare_parameter("using_ekf", false);
     this->declare_parameter("using_joy", true);
     this->declare_parameter("publish_rate", 100);
-    cmd_pub = this->create_publisher<bur_rov_msgs::msg::Command>(this->get_parameter("cmd_pub_topic").as_string(), 10);
+    cmd_pub = this->create_publisher<bur_msgs::msg::Command>(this->get_parameter("cmd_pub_topic").as_string(), 10);
 
     int publish_rate = this->get_parameter("publish_rate").as_int();
     timer = this->create_wall_timer(std::chrono::milliseconds(1000 / publish_rate), std::bind(&JoyCommand::timer_callback, this));

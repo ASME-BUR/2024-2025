@@ -15,7 +15,7 @@ find_package(bur_msgs REQUIRED)
 # Include directories
 include_directories(
   REQUIRED
-  include/controller
+  include/bur_controller
 )
 
 

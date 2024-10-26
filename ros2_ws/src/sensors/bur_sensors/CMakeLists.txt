@@ -16,9 +16,10 @@ find_package(ament_cmake REQUIRED)
 # manually. find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(drivers REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+
+find_package(drivers REQUIRED)
 
 include_directories(include/${PROJECT_NAME})
 
@@ -30,7 +31,7 @@ include_directories(include/${PROJECT_NAME})
 #   imu_node PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 #              "$<INSTALL_INTERFACE:include>")
 
-add_executable(bar30_node src/${PROJECT_NAME}/bar30_node.cpp)
+add_executable(bar30_node src/bar30_node.cpp)
 ament_target_dependencies(bar30_node rclcpp geometry_msgs nav_msgs)
 target_link_libraries(bar30_node drivers::bar30_depth_sensor)
 

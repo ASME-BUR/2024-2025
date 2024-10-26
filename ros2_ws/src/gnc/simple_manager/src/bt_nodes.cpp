@@ -74,7 +74,7 @@ BT::NodeStatus TurnToOrientation::turn() {
 
 // Vision Nodes (unused)
 
-int getMatchingDetection(const std::vector<yolo_msgs::msg::CVDetection> detected,
+int getMatchingDetection(const std::vector<bur_msgs::msg::CVDetection> detected,
                                     const int label) {
     for(int i = 0; i < detected.size(); i++) {
         if(detected[i].label == label) {

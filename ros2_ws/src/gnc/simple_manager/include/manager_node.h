@@ -12,8 +12,9 @@
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "sensor_msgs/msg/joy.hpp"
-#include "yolo_msgs/msg/cv_detection.hpp"
-#include "yolo_msgs/msg/cv_detections.hpp"
+
+#include "bur_msgs/msg/cv_detection.hpp"
+#include "bur_msgs/msg/cv_detections.hpp"
 
 #include "tf2_ros/transform_listener.h"
 #include "tf2_ros/buffer.h"
@@ -48,14 +49,14 @@ class SimpleManager : public rclcpp::Node
         bool buoy_is_left_ = true;
         bool gate_complete = false;
 
-        std::vector<yolo_msgs::msg::CVDetection> detected_;
+        std::vector<bur_msgs::msg::CVDetection> detected_;
 
     private:
     
         BT::Tree behavior_tree_;
 
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr localizer_sub_;
-        rclcpp::Subscription<yolo_msgs::msg::CVDetections>::SharedPtr vision_sub_;
+        rclcpp::Subscription<bur_msgs::msg::CVDetections>::SharedPtr vision_sub_;
         rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr depth_sub_;
         
         rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_pub_;
@@ -83,7 +84,7 @@ class SimpleManager : public rclcpp::Node
         // ROS Callbacks
         void publish_goal_pose();
         void localizer_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
-        void vision_callback(const yolo_msgs::msg::CVDetections::SharedPtr msg);
+        void vision_callback(const bur_msgs::msg::CVDetections::SharedPtr msg);
         void depth_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
 };
 

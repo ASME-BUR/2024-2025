@@ -27,7 +27,7 @@ SimpleManager::SimpleManager() : rclcpp::Node::Node("simple_manager")
     localizer_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
         this->get_parameter("localizer_topic").as_string(), 
         10, std::bind(&SimpleManager::localizer_callback, this, std::placeholders::_1));
-    vision_sub_ = this->create_subscription<yolo_msgs::msg::CVDetections>(
+    vision_sub_ = this->create_subscription<bur_msgs::msg::CVDetections>(
         this->get_parameter("vision_topic").as_string(),
         10, std::bind(&SimpleManager::vision_callback, this, std::placeholders::_1));
 
@@ -84,11 +84,11 @@ void SimpleManager::localizer_callback(const nav_msgs::msg::Odometry::SharedPtr 
     this->current_vel_ = msg->twist.twist;
 }
 
-void SimpleManager::vision_callback(const yolo_msgs::msg::CVDetections::SharedPtr msg) {
+void SimpleManager::vision_callback(const bur_msgs::msg::CVDetections::SharedPtr msg) {
     this->detected_ = msg->detected;
 
     if(!gate_complete) {
-        yolo_msgs::msg::CVDetection buoy_detection;
+        bur_msgs::msg::CVDetection buoy_detection;
 
         for(int i = 0; i<this->detected_.size(); i++) {
             if(this->detected_[i].label == YOLO_BUOY) {

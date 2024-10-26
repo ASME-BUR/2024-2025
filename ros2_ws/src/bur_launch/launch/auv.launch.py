@@ -10,7 +10,7 @@ from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 def generate_launch_description():
     controller_launch = IncludeLaunchDescription(
         XMLLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('controller'), 'launch'),
+            get_package_share_directory('bur_controller'), 'launch'),
             '/controller.launch'
         ])
     )

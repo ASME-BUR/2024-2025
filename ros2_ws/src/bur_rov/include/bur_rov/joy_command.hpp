@@ -8,7 +8,7 @@
 #include "sensor_msgs/msg/joy.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 #include "nav_msgs/msg/odometry.hpp"
-#include "bur_rov_msgs/msg/command.hpp"
+#include "bur_msgs/msg/command.hpp"
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/utils.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
@@ -38,7 +38,7 @@ private:
     void set_constants();
     double *vel_calc(double acceleration[3], rclcpp::Time current_time, rclcpp::Time previous_time);
 
-    rclcpp::Publisher<bur_rov_msgs::msg::Command>::SharedPtr cmd_pub;
+    rclcpp::Publisher<bur_msgs::msg::Command>::SharedPtr cmd_pub;
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr imu_euler;
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr joy_euler;
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr debug_imu_pub;
@@ -56,7 +56,7 @@ private:
         const std::vector<rclcpp::Parameter> &parameters);
     rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_callback;
 
-    bur_rov_msgs::msg::Command output;
+    bur_msgs::msg::Command output;
     geometry_msgs::msg::Vector3Stamped joy_euler_msg;
     bool new_params = false;
     bool using_joy;

@@ -27,7 +27,7 @@ namespace controller
     // publishers
 
     rclcpp::Publisher<geometry_msgs::msg::WrenchStamped>::SharedPtr pubControlEffort;
-    rclcpp::Subscription<bur_rov_msgs::msg::Command>::SharedPtr state_setpoint_sub;
+    rclcpp::Subscription<bur_msgs::msg::Command>::SharedPtr state_setpoint_sub;
 
     rclcpp::Time prevTime;
 
@@ -52,7 +52,7 @@ namespace controller
     rcl_interfaces::msg::SetParametersResult parametersCallback(
         const std::vector<rclcpp::Parameter> &parameters);
     rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_callback;
-    void currentCommandCallback(const bur_rov_msgs::msg::Command::SharedPtr msg);
+    void currentCommandCallback(const bur_msgs::msg::Command::SharedPtr msg);
     void set_constants();
     void publishState();
 
