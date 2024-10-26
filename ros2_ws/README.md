@@ -31,4 +31,3 @@ rm -r build/ install/ log/
    - `bur_sensors`: ROS nodes for publishing pressure sensor/IMU measurements from Raspberry Pi
    - `drivers`: sensor drivers
 5. `submodules/`: Contains Git submodules
-
