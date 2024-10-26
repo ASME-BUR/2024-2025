@@ -13,6 +13,7 @@
   <depend>bur_msgs</depend>
   <depend>bur_rov</depend>
   <depend>bur_sensors</depend>
+  <depend>bur_thruster_manager</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

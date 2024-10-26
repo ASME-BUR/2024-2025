@@ -2,7 +2,7 @@
   <!-- Name of the node -->
   <arg name="controller_node" default="bur_controller"/>
 
-  <node pkg="controller" name="$(var controller_node)" exec="controller" output="screen">
+  <node pkg="bur_controller" name="$(var controller_node)" exec="bur_controller" output="screen">
     <param name="sub_topic" value="command"/>
     <param name="target_vel_topic" value="/cmd_vel"/>
     <param name="pub_topic" value="control_effort"/>

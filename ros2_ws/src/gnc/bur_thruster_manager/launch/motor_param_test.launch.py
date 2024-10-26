@@ -7,13 +7,13 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     config = os.path.join(
-        get_package_share_directory('thruster_manager'),
+        get_package_share_directory('bur_thruster_manager'),
         'config',
         'motor_force_config_NWU.yaml'
         )
         
     node=Node(
-        package = 'thruster_manager',
+        package = 'bur_thruster_manager',
         name = 'thruster_manager',
         executable = 'thruster_manager',
         output = 'screen',
