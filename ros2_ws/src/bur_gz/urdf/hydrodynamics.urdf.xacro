@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<xacro>
+  <gazebo>
+    <plugin filename="ignition-gazebo-hydrodynamics-system" name="ignition::gazebo::systems::Hydrodynamics">
+
+      <link_name>${ns}/base_link</link_name>
+
+      <xDotU>-5.5</xDotU>
+      <yDotV>-12.7</yDotV>
+      <zDotW>-14.57</zDotW>
+      <kDotP>-0.12</kDotP>
+      <mDotQ>-0.12</mDotQ>
+      <nDotR>-0.12</nDotR>
+
+
+      <xUabsU>-33.800000000000004</xUabsU>
+      <yVabsV>-54.26875</yVabsV>
+      <zWabsW>-73.37135</zWabsW>
+      <kPabsP>-40.0</kPabsP>
+      <mQabsQ>-40.0</mQabsQ>
+      <nRabsR>-40.0</nRabsR>
+
+      <xU>-25.15</xU>
+      <yV>-7.364</yV>
+      <zW>-17.955</zW>
+      <kP>-10.888</kP>
+      <mQ>-20.761</mQ>
+      <nR>-3.744</nR>
+
+    </plugin>
+  </gazebo>
+</xacro>
