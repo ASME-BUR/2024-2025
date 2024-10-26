@@ -16,18 +16,19 @@ rm -r build/ install/ log/
 
 ## Packages
 
-1. `bur_launch`: Launch files for sensors & autonomous operation
-2. `bur_msgs`: Custom ROS message files
-3. `bur_rov`: Launch files & scripts for robot tele-operation
-4. `gnc/`
+1. `bur_msgs`: Custom ROS message files
+2. `gnc/`
+   - `bur_autonomy`: BehaviorTree.CPP/Navigation2-based behavior tree mission manager (unused)
    - `bur_controller`: PID controllers for translational/rotational movement
    - `bur_localization`: Parameters & launch file for EKF sensor fusion
-   - `bur_planner`: BehaviorTree.CPP/Navigation2-based behavior tree mission manager (unused)
+   - `bur_thruster_manager`: Determines power for each thruster based on target force Wrench
    - `simple_manager`: Simple implementation of a BehaviorTree.CPP behavior tree mission manager
    - `simple_planner`: Simple implementation of a straight-line motion planner
-   - `thruster_manager`: Determines power for each thruster based on target force Wrench
-5. `sensors/`
+3. `launch/`
+   - `bur_launch`: Launch files for sensors & autonomous operation
+   - `bur_rov`: Launch files & scripts for robot tele-operation
+4. `sensors/`
    - `bur_sensors`: ROS nodes for publishing pressure sensor/IMU measurements from Raspberry Pi
    - `drivers`: sensor drivers
-6. `submodules/`: Contains Git submodules
+5. `submodules/`: Contains Git submodules
 
