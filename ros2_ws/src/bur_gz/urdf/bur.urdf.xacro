@@ -10,11 +10,6 @@
   <xacro:property name="ns" value="$(arg namespace)"/>
   <xacro:property name="density" value="$(arg density)"/>
 
-  <!-- Import modules -->
-  <xacro:include filename="helpers.urdf.xacro"/>
-  <xacro:include filename="colors.urdf.xacro"/>
-  <xacro:include filename="thruster.urdf.xacro"/>
-
   <!-- Dimensions -->
   <xacro:property name="x_size" value="0.40"/>
   <xacro:property name="y_size" value="0.80"/>
@@ -74,6 +69,13 @@
 
   </link>
 
+  <!-- Import modules -->
+  <xacro:include filename="helpers.urdf.xacro"/>
+  <xacro:include filename="colors.urdf.xacro"/>
+  <xacro:include filename="hydrodynamics.urdf.xacro"/>
+  <xacro:include filename="thruster.urdf.xacro"/>
+
+
   <xacro:thruster thruster_id="1">
     <origin xyz="0.1555 -0.15 -0.0725" rpy="0 0 0.7853981634"/>
   </xacro:thruster>
@@ -100,4 +102,28 @@
     <origin xyz="${-x_size / 3} ${y_size / 3} 0" rpy="${-pi/4} ${pi/2} 0"/>
   </xacro:thruster>
 
+  <xacro:if value="$(arg simulation)">
+    <gazebo>
+      <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher"/>
+
+      <plugin
+          filename="ignition-gazebo-odometry-publisher-system"
+          name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>${ns}/odom</odom_frame>
+        <dimensions>3</dimensions>
+        <robot_base_frame>${ns}/base_link</robot_base_frame>
+        <odom_publish_frequency>10</odom_publish_frequency>
+      </plugin>
+
+      <plugin
+          filename="ignition-gazebo-pose-publisher-system"
+          name="ignition::gazebo::systems::PosePublisher">
+        <publish_link_pose>false</publish_link_pose>
+        <publish_collision_pose>false</publish_collision_pose>
+        <publish_visual_pose>false</publish_visual_pose>
+        <publish_nested_model_pose>true</publish_nested_model_pose>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+  
 </robot>

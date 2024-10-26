@@ -7,35 +7,33 @@
 
   <xacro:macro name="thruster" params="thruster_id *origin">
     <link name="${ns}/thruster${thruster_id}">
+      <visual>
+        <geometry>
+          <cylinder length="${prop_l}" radius="${prop_r}"/>
+        </geometry>
 
-    <visual>
-      <geometry>
-        <cylinder length="${prop_l}" radius="${prop_r}"/>
-      </geometry>
+        <xacro:if value="${thruster_id in [1,2,3,4]}">
+          <material name="yellow"/>
+        </xacro:if>
+        <xacro:if value="${thruster_id in [5,6,7,8]}">
+          <material name="red"/>
+        </xacro:if>
+      </visual>
 
-      <xacro:if value="${thruster_id in [1,2,3,4]}">
-        <material name="yellow"/>
-      </xacro:if>
-      <xacro:if value="${thruster_id in [5,6,7,8]}">
-        <material name="red"/>
-      </xacro:if>
-    </visual>
+      <collision>
+        <origin rpy="0 ${pi/2} 0"/>
+        <geometry>
+          <cylinder length="${prop_l}" radius="${prop_r}"/>
+        </geometry>
+      </collision>
 
-    <collision>
-      <origin rpy="0 ${pi/2} 0"/>
-      <geometry>
-        <cylinder length="${prop_l}" radius="${prop_r}"/>
-      </geometry>
-    </collision>
-
-    <inertial>
-      <!-- thruster axis is X -->
-      <origin xyz="${prop_l/2} 0 0" rpy="0 0 0" />
-      <mass value="${prop_mass}" />
-      <inertia  izz="${prop_mass*prop_r*prop_r / 4  + prop_mass*prop_l*prop_l / 12}" ixy="0.0"  ixz="0.0"
-        iyy="${prop_mass*prop_r*prop_r / 4  + prop_mass*prop_l*prop_l / 12}" iyz="0.0"
-        ixx="${prop_mass*prop_r*prop_r / 2}" />
-    </inertial>
+      <inertial>
+        <!-- thruster axis is X -->
+        <origin xyz="${prop_l/2} 0 0" rpy="0 0 0" />
+        <mass value="${prop_mass}" />
+        <inertia  izz="${prop_mass*prop_r*prop_r / 4  + prop_mass*prop_l*prop_l / 12}" ixy="0.0"  ixz="0.0"
+                  iyy="${prop_mass*prop_r*prop_r / 4  + prop_mass*prop_l*prop_l / 12}" iyz="0.0" ixx="${prop_mass*prop_r*prop_r / 2}" />
+      </inertial>
     </link>
 
     <!-- Joint between thruster link and vehicle base link -->
