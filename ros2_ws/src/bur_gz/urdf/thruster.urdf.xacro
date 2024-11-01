@@ -37,33 +37,32 @@
     </link>
 
     <!-- Joint between thruster link and vehicle base link -->
-    <joint name="thruster${thruster_id}" type="fixed">
+    <joint name="thruster${thruster_id}" type="continuous">
       <xacro:insert_block name="origin" />
       <axis xyz="1 0 0" />
       <parent link="${ns}/base_link" />
       <child link="${ns}/thruster${thruster_id}" />
-      <limits effort="-1" velocity="-1"/>
     </joint>
 
     <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-    <!--    <xacro:if value="$(arg simulation)"> -->
-    <gazebo>
-      <plugin
-        filename="ignition-gazebo-thruster-system"
-        name="ignition::gazebo::systems::Thruster">
-        <namespace>${ns}</namespace>
-        <joint_name>thruster${thruster_id}</joint_name>
-        <topic>thruster${thruster_id}/cmd</topic>
-        <thrust_coefficient>0.011</thrust_coefficient>
-        <fluid_density>${density}</fluid_density>
-        <propeller_diameter>${2*prop_r}</propeller_diameter>
-        <velocity_control>true</velocity_control>
-        <use_angvel_cmd>false</use_angvel_cmd>
-        <max_thrust_cmd>40</max_thrust_cmd>
-        <min_thrust_cmd>-40</min_thrust_cmd>
-      </plugin>
-    </gazebo>
-    <!--  </xacro:if> -->
+    <xacro:if value="$(arg simulation)">
+      <gazebo>
+        <plugin
+            filename="ignition-gazebo-thruster-system"
+            name="ignition::gazebo::systems::Thruster">
+          <namespace>${ns}</namespace>
+          <joint_name>thruster${thruster_id}</joint_name>
+          <topic>thruster${thruster_id}/cmd</topic>
+          <thrust_coefficient>0.011</thrust_coefficient>
+          <fluid_density>${density}</fluid_density>
+          <propeller_diameter>${2*prop_r}</propeller_diameter>
+          <velocity_control>true</velocity_control>
+          <use_angvel_cmd>false</use_angvel_cmd>
+          <max_thrust_cmd>40</max_thrust_cmd>
+          <min_thrust_cmd>-40</min_thrust_cmd>
+        </plugin>
+      </gazebo>
+    </xacro:if>
   </xacro:macro>
 
 </robot>

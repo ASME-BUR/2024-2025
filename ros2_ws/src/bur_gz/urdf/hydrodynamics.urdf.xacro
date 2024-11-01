@@ -3,7 +3,7 @@
   <gazebo>
     <plugin filename="ignition-gazebo-hydrodynamics-system" name="ignition::gazebo::systems::Hydrodynamics">
 
-      <link_name>${ns}/base_link</link_name>
+      <link_name>${ns}/dlink</link_name>
 
       <xDotU>-5.5</xDotU>
       <yDotV>-12.7</yDotV>

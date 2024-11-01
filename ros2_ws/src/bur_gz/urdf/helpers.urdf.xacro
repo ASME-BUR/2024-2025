@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Helper methods -->
-  <xacro:macro name="gen_box" params="name x y z">
+  <xacro:macro name="box" params="name x y z">
     <link name="${name}">
       <visual>
         <geometry>
