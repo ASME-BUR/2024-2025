@@ -43,22 +43,13 @@ def generate_launch_description():
                    'bur', '-allow_renaming', 'true'],
     )
 
-    # load_joint_broad = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-    #          'joint_broad'],
-    #     output='screen'
-    # )
-
-    # load_pa_diff_drive = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-    #          'pa_diff_drive'],
-    #     output='screen'
-    # )
+    load_joint_broad = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+             'joint_broad'],
+        output='screen'
+    )
 
     world_file = os.path.join('share', 'bur_gz'), glob('worlds/demo_world.sdf')
-
-    print("Fucking kill yourself")
-    print(world_file)
 
     return LaunchDescription([
         # Launch gazebo environment
