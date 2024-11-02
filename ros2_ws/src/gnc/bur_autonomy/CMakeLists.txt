@@ -7,24 +7,24 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # DEPENDENCIES
 find_package(ament_cmake REQUIRED)
-find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED )
 find_package(rclcpp_action REQUIRED )
-
+find_package(behaviortree_cpp REQUIRED )
+find_package(ament_index_cpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(nav_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
-
-find_package(behaviortree_cpp_v3 REQUIRED )
 find_package(nav2_behavior_tree REQUIRED)
 
+find_package(bur_msgs REQUIRED)
+
 set(THIS_PACKAGE_INCLUDE_DEPENDS
+    behaviortree_cpp
+    nav2_behavior_tree
     rclcpp
     geometry_msgs
-    nav_msgs
     std_msgs
-    behaviortree_cpp_v3
-    nav2_behavior_tree)
+    rclcpp_action
+    bur_msgs)
 
 # macro to remove some boiler plate
 function(add_target_dependencies target)
@@ -35,10 +35,14 @@ function(add_target_dependencies target)
 endfunction()
 
 # EXECUTABLES
-include_directories(include/${PROJECT_NAME})
 
-add_executable(bur_planner src/bur_planner.cpp)
-add_target_dependencies(bur_planner)
+add_executable(bur_autonomy src/manager_node.cpp src/bt_nodes.cpp)
+
+add_target_dependencies(bur_autonomy)
+
+#target_include_directories(simple_manager PUBLIC
+#  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#  $<INSTALL_INTERFACE:include>)
 
 # target_link_libraries(${PROJECT_NAME}
 # ${rclcpp_LIBRARIES}
@@ -46,11 +50,12 @@ add_target_dependencies(bur_planner)
 # ${geometry_msgs_LIBRARIES}
 # )
 
-install(TARGETS bur_planner
+install(TARGETS bur_autonomy
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY behavior_trees launch params
   DESTINATION share/${PROJECT_NAME}/)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -63,6 +68,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_dependencies(behaviortree_cpp_v3)
+ament_export_dependencies(behaviortree_cpp)
 
 ament_package()
