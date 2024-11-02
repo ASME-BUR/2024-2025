@@ -13,3 +13,6 @@
 [submodule "ros2_ws/src/submodules/ros2_usb_camera"]
 	path = ros2_ws/src/submodules/ros2_usb_camera
 	url = https://github.com/klintan/ros2_usb_camera.git
+[submodule "ros2_ws/thruster_manager"]
+	path = ros2_ws/thruster_manager
+	url = https://github.com/CentraleNantesROV/thruster_manager.git

@@ -43,12 +43,6 @@ def generate_launch_description():
                    'bur', '-allow_renaming', 'true'],
     )
 
-    load_joint_broad = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_broad'],
-        output='screen'
-    )
-
     world_file = os.path.join('share', 'bur_gz'), glob('worlds/demo_world.sdf')
 
     return LaunchDescription([
@@ -59,12 +53,6 @@ def generate_launch_description():
                                        'launch',
                                        'gz_sim.launch.py'])]),
             launch_arguments=[('gz_args', [' -r -v 4 src/bur_gz/worlds/demo_world.sdf'])]),
-        # RegisterEventHandler(
-        #     event_handler=OnProcessExit(
-        #         target_action=gz_spawn_entity,
-        #         on_exit=[load_joint_broad],
-        #     )
-        # ),
         node_robot_state_publisher,
         gz_spawn_entity,
         # Launch Arguments
