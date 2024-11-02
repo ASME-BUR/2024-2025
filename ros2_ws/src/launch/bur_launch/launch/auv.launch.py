@@ -40,7 +40,7 @@ def generate_launch_description():
     )
     manager = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('simple_manager'), 'launch'),
+            get_package_share_directory('bur_autonomy'), 'launch'),
             '/manager.launch.py'
         ])
     )
