@@ -45,6 +45,63 @@ def generate_launch_description():
 
     world_file = os.path.join('share', 'bur_gz'), glob('worlds/demo_world.sdf')
 
+    thruster1_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster1/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+    thruster2_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster2/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+    thruster3_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster3/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+    thruster4_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster4/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+    thruster5_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster5/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+    thruster6_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster6/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+    thruster7_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster7/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+    thruster8_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/joint/thruster8/cmd_pos@std_msgs/msg/Float64@ignition.msgs.Double'
+        ],
+        output='screen'
+    )
+
     return LaunchDescription([
         # Launch gazebo environment
         IncludeLaunchDescription(
@@ -55,6 +112,17 @@ def generate_launch_description():
             launch_arguments=[('gz_args', [' -r -v 4 src/bur_gz/worlds/demo_world.sdf'])]),
         node_robot_state_publisher,
         gz_spawn_entity,
+
+        # Thruster bridges
+        thruster1_bridge,
+        thruster2_bridge,
+        thruster3_bridge,
+        thruster4_bridge,
+        thruster5_bridge,
+        thruster6_bridge,
+        thruster7_bridge,
+        thruster8_bridge,
+
         # Launch Arguments
         DeclareLaunchArgument(
             'use_sim_time',
