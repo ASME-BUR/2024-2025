@@ -4,6 +4,12 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="bur">
+  <link name="bur/dlink"/>
+  <joint name="bur/dummy_link" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="bur/dlink"/>
+    <child link="bur/base_link"/>
+  </joint>
   <link name="bur/base_link">
     <inertial>
       <mass value="14.8"/>
@@ -54,7 +60,7 @@
   </material>
   <gazebo>
     <plugin filename="ignition-gazebo-hydrodynamics-system" name="ignition::gazebo::systems::Hydrodynamics">
-      <link_name>bur/base_link</link_name>
+      <link_name>bur/dlink</link_name>
       <xDotU>-5.5</xDotU>
       <yDotV>-12.7</yDotV>
       <zDotW>-14.57</zDotW>
@@ -77,15 +83,18 @@
   </gazebo>
   <link name="bur/thruster1">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="yellow"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -96,19 +105,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster1" type="fixed">
-    <origin rpy="0 0 0.7853981634" xyz="0.1555 -0.15 -0.0725"/>
-    <axis xyz="1 0 0"/>
+  <joint name="thruster1" type="continuous">
+    <origin rpy="0 0 0" xyz="0.1555 -0.15 -0.0725"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster1"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster1</joint_name>
+      <joint_name>thruster1</joint_name>
       <topic>thruster1/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -119,18 +126,20 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <link name="bur/thruster2">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="yellow"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -141,19 +150,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster2" type="fixed">
-    <origin rpy="0 0 0.7853981634" xyz="0.1555 0.15 -0.0725"/>
-    <axis xyz="1 0 0"/>
+  <joint name="thruster2" type="continuous">
+    <origin rpy="0 0 0" xyz="0.1555 0.15 -0.0725"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster2"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster2</joint_name>
+      <joint_name>thruster2</joint_name>
       <topic>thruster2/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -164,18 +171,20 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <link name="bur/thruster3">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="yellow"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -186,19 +195,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster3" type="fixed">
-    <origin rpy="0 0 0.7853981634" xyz="-0.1555 -0.15 -0.0725"/>
-    <axis xyz="1 0 0"/>
+  <joint name="thruster3" type="continuous">
+    <origin rpy="0 0 0" xyz="-0.1555 -0.15 -0.0725"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster3"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster3</joint_name>
+      <joint_name>thruster3</joint_name>
       <topic>thruster3/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -209,18 +216,20 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <link name="bur/thruster4">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="yellow"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -231,19 +240,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster4" type="fixed">
-    <origin rpy="0 0 0.7853981634" xyz="-0.1555 0.15 -0.0725"/>
-    <axis xyz="1 0 0"/>
+  <joint name="thruster4" type="continuous">
+    <origin rpy="0 0 0" xyz="-0.1555 0.15 -0.0725"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster4"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster4</joint_name>
+      <joint_name>thruster4</joint_name>
       <topic>thruster4/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -254,18 +261,20 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <link name="bur/thruster5">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="red"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -276,19 +285,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster5" type="fixed">
+  <joint name="thruster5" type="continuous">
     <origin rpy="-0.7853981633974483 1.5707963267948966 0" xyz="0.13333333333333333 -0.26666666666666666 0"/>
-    <axis xyz="1 0 0"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster5"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster5</joint_name>
+      <joint_name>thruster5</joint_name>
       <topic>thruster5/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -299,18 +306,20 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <link name="bur/thruster6">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="red"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -321,19 +330,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster6" type="fixed">
+  <joint name="thruster6" type="continuous">
     <origin rpy="0.7853981633974483 1.5707963267948966 0" xyz="0.13333333333333333 0.26666666666666666 0"/>
-    <axis xyz="1 0 0"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster6"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster6</joint_name>
+      <joint_name>thruster6</joint_name>
       <topic>thruster6/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -344,18 +351,20 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <link name="bur/thruster7">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="red"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -366,19 +375,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster7" type="fixed">
-    <origin rpy="0.7853981633974483 1.5707963267948966 0" xyz="-0.13333333333333333 -0.26666666666666666 0"/>
-    <axis xyz="1 0 0"/>
+  <joint name="thruster7" type="continuous">
+    <origin rpy="-0.7853981633974483 -1.5707963267948966 0" xyz="-0.13333333333333333 -0.26666666666666666 0"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster7"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster7</joint_name>
+      <joint_name>thruster7</joint_name>
       <topic>thruster7/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -389,18 +396,20 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <link name="bur/thruster8">
     <visual>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
       <material name="red"/>
     </visual>
     <collision>
-      <origin rpy="0 1.5707963267948966 0"/>
+      <origin rpy="1.5707963267948966 3.141592653589793 0" xyz="0.10 0.10 0"/>
       <geometry>
-        <cylinder length="0.035" radius="0.05"/>
+        <!-- cylinder length="${prop_l}" radius="${prop_r}"/ -->
+        <mesh filename="file:///bur/ros2_ws/install/bur_gz/share/bur_gz/meshes/Impeller.STL" scale="0.0007 0.0007 0.0007"/>
       </geometry>
     </collision>
     <inertial>
@@ -411,19 +420,17 @@
     </inertial>
   </link>
   <!-- Joint between thruster link and vehicle base link -->
-  <joint name="thruster8" type="fixed">
-    <origin rpy="-0.7853981633974483 1.5707963267948966 0" xyz="-0.13333333333333333 0.26666666666666666 0"/>
-    <axis xyz="1 0 0"/>
+  <joint name="thruster8" type="continuous">
+    <origin rpy="0.7853981633974483 -1.5707963267948966 0" xyz="-0.13333333333333333 0.26666666666666666 0"/>
+    <axis xyz="0 0 1"/>
     <parent link="bur/base_link"/>
     <child link="bur/thruster8"/>
-    <limits effort="-1" velocity="-1"/>
   </joint>
   <!-- ignition topic is /model/{ns}/joint/{joint_name}/cmd_pos -->
-  <!--    <xacro:if value="$(arg simulation)"> -->
   <gazebo>
     <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
       <namespace>bur</namespace>
-      <joint_name>bur/thruster8</joint_name>
+      <joint_name>thruster8</joint_name>
       <topic>thruster8/cmd</topic>
       <thrust_coefficient>0.011</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -434,13 +441,12 @@
       <min_thrust_cmd>-40</min_thrust_cmd>
     </plugin>
   </gazebo>
-  <!--  </xacro:if> -->
   <gazebo>
     <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher"/>
     <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
       <odom_frame>bur/odom</odom_frame>
       <dimensions>3</dimensions>
-      <robot_base_frame>bur/base_link</robot_base_frame>
+      <robot_base_frame>bur/dlink</robot_base_frame>
       <odom_publish_frequency>10</odom_publish_frequency>
     </plugin>
     <plugin filename="ignition-gazebo-pose-publisher-system" name="ignition::gazebo::systems::PosePublisher">
