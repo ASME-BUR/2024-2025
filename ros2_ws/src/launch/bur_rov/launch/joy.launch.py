@@ -21,11 +21,7 @@ def generate_launch_description():
                 package="bur_rov",
                 executable="joy_command",
                 name="joy_command",
-                parameters=[
-                    {"using_joy": True},
-                    {"using_ekf": False},
-                os.path.join(get_package_share_directory("bur_rov"), 'config', 'ps4.yaml')
-                ],
+                parameters=[],
             ),
         ]
     )

@@ -28,14 +28,20 @@ def generate_launch_description():
     )
     camera = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('bur_rov'), 'launch'),
+            get_package_share_directory('bur_launch'), 'launch'),
             '/camera.launch.py'
         ])
     )
     arduino = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('bur_rov'), 'launch'),
+            get_package_share_directory('bur_launch'), 'launch'),
             '/micro_ros.launch.py'
+        ])
+    )
+    rov_joy = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('bur_rov'), 'launch'),
+            '/joy.launch.py'
         ])
     )
 
@@ -45,5 +51,6 @@ def generate_launch_description():
         controller_launch,
         # depth_sensor,
         # camera,
-        # arduino
+        arduino,
+        rov_joy
     ])

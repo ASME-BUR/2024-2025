@@ -45,16 +45,6 @@ def generate_launch_description():
         ])
     )
 
-    # joy = Node(
-    #     package="bur_rov",
-    #     executable="joy_command",
-    #     name="joy_command",
-    #     parameters=[{"using_joy": True},
-    #     {"using_ekf": False},
-    #     os.path.join(get_package_share_directory("bur_rov"), 'config', 'fake_joystick.yaml')
-    #     ],
-    # )
-
     # open_loop = Node(
     #     package="bur_rov",
     #     executable="open_loop",
