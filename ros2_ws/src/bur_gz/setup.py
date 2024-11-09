@@ -33,7 +33,7 @@ setup(
         ('share/' + package_name + '/config/', glob('config/*')),
         ('share/' + package_name + '/urdf/', glob('urdf/*')),
         ('share/' + package_name + '/worlds/', glob('worlds/*')),
-        # ('share/' + package_name + '/meshes/visual', glob('meshes/visual/*')),
+        ('share/' + package_name + '/meshes/', glob('meshes/*')),
         ('share/' + package_name + '/rviz/', glob('rviz/*')),
     ],
     install_requires=['setuptools'],
