@@ -18,11 +18,10 @@ rm -r build/ install/ log/
 
 1. `bur_msgs`: Custom ROS message files
 2. `gnc/`
-   - `bur_autonomy`: BehaviorTree.CPP/Navigation2-based behavior tree mission manager (unused)
+   - `bur_autonomy`: BehaviorTree.CPP behavior tree mission manager
    - `bur_controller`: PID controllers for translational/rotational movement
    - `bur_localization`: Parameters & launch file for EKF sensor fusion
    - `bur_thruster_manager`: Determines power for each thruster based on target force Wrench
-   - `simple_manager`: Simple implementation of a BehaviorTree.CPP behavior tree mission manager
    - `simple_planner`: Simple implementation of a straight-line motion planner
 3. `launch/`
    - `bur_launch`: Launch files for sensors & autonomous operation

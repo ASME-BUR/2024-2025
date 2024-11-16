@@ -11,14 +11,22 @@ Follow the instructions below and install the `ros-humble-desktop`/`ros-dev-tool
 
 Additionally, follow the instructions for environment setup here: <https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html>
 
+### 2. Install Pigpio ###
+Move to your root directory:
+   ```
+   cd ~/
+   ```
 
-### 2. Clone this repository into your root directory: ###
+Follow the instructions below:
+   <https://abyz.me.uk/rpi/pigpio/download.html>
+
+### 3. Clone this repository into your root directory: ###
 
    ```
    cd ~/ && git clone --recurse-submodules https://github.com/ASME-BUR/2024-2025.git
    ```
 
-### 3. Put these commands into your ~/.bashrc: ###
+### 4. Put these commands into your ~/.bashrc: ###
 Add the ROS2 source commands to your bashrc
    ```
    echo "source /opt/ros/humble/setup.bash
@@ -28,7 +36,7 @@ Add the ROS2 source commands to your bashrc
 - The `/opt/ros/humble/setup.bash` file sources all your ros packages installed in `/opt`, e.g. all packages installed via `sudo apt-get <PACKAGE>`   
 - The `install/setup.bash` file sources all packages built via `colcon build` (in your ws); however, you will need to re-source it every time you build a package for the first time. (You can simply create a new terminal.)
 
-### 4. Install the ROS dependency manager. ###
+### 5. Install the ROS dependency manager. ###
 Run the following in a terminal:
 
    ```
@@ -45,12 +53,12 @@ Run the following in a terminal:
 
    - If rosdep is having trouble installing packages, you can also install them manually using `sudo apt install ros-humble-<PACKAGE_NAME>`
 
-### 5. Install Colcon, the build tool system: ###
+### 6. Install Colcon, the build tool system: ###
    ```
    sudo apt install python3-colcon-common-extensions
    ```
 
-### 6. Build packages in ros2_ws: ###
+### 7. Build packages in ros2_ws: ###
    ```
    cd ~/2024-2025/ros2_ws
    colcon build
@@ -65,12 +73,6 @@ Run the following in a terminal:
       ```
       colcon build --packages-up-to <PACKAGE-NAME>
       ```
-
-
-### 7. Install Pigpio ### 
-Follow the instructions below:
-   <https://abyz.me.uk/rpi/pigpio/download.html>
-
 
 ### (Optional) Install Gazebo: ###
 
