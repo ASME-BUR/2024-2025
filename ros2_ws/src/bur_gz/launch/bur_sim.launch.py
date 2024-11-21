@@ -101,6 +101,13 @@ def generate_launch_description():
         ],
         output='screen'
     )
+    imu_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU'
+        ],
+        output='screen'
+    )
 
     return LaunchDescription([
         # Launch gazebo environment
@@ -122,6 +129,7 @@ def generate_launch_description():
         thruster6_bridge,
         thruster7_bridge,
         thruster8_bridge,
+        imu_bridge,
 
         # Launch Arguments
         DeclareLaunchArgument(

@@ -81,6 +81,7 @@
   <xacro:include filename="colors.urdf.xacro"/>
   <xacro:include filename="hydrodynamics.urdf.xacro"/>
   <xacro:include filename="thruster.urdf.xacro"/>
+  <xacro:include filename="imu.urdf.xacro"/>
 
   <xacro:thruster thruster_id="1">
     <origin xyz="0.1555 -0.15 -0.0725" rpy="0 0 0"/>
