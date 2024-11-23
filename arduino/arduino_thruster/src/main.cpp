@@ -7,7 +7,7 @@
 #include <rmw_microros/rmw_microros.h>
 
 #include <Servo.h>
-#include "bur_rov_msgs/msg/thruster_command.h"
+#include "bur_msgs/msg/thruster_command.h"
 
 #define RCCHECK(fn)              \
   {                              \
@@ -33,7 +33,7 @@
   } while (0)
 
 rcl_subscription_t subscriber;
-bur_rov_msgs__msg__ThrusterCommand msg;
+bur_msgs__msg__ThrusterCommand msg;
 rclc_executor_t executor;
 rcl_timer_t timer;
 rclc_support_t support;
@@ -60,7 +60,7 @@ void (*resetFunc)(void) = 0;
 // subscription callback
 void sub_callback(const void *msgin)
 {
-  const bur_rov_msgs__msg__ThrusterCommand *msg = (const bur_rov_msgs__msg__ThrusterCommand *)msgin;
+  const bur_msgs__msg__ThrusterCommand *msg = (const bur_msgs__msg__ThrusterCommand *)msgin;
   // if (sizeof(msg->thrusters) == MOTOR_COUNT)
   // {
   for (int i = 0; i < MOTOR_COUNT; i++)
@@ -107,7 +107,7 @@ bool create_entities()
   RCCHECK(rclc_node_init_default(&node, "arduino_node_thruster", "", &support));
   // create subscriber
   RCCHECK(rclc_subscription_init_best_effort(&subscriber, &node,
-                                         ROSIDL_GET_MSG_TYPE_SUPPORT(bur_rov_msgs, msg, ThrusterCommand),
+                                         ROSIDL_GET_MSG_TYPE_SUPPORT(bur_msgs, msg, ThrusterCommand),
                                          "thruster_command"));
 
   // create executor
