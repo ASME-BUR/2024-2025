@@ -1,0 +1,32 @@
+services:
+    bur:
+        build:
+            context: ./bur-image
+            dockerfile: Dockerfile
+        stdin_open: true
+        tty: true
+        environment:
+            DISPLAY: bur-display-service:0
+        networks:
+            - bur-display
+        volumes:
+            - ./ros2_ws:/ros2_ws
+        working_dir: /ros2_ws
+
+    bur-display-service:
+        image: theasp/novnc:latest
+        ports:
+            - "5050:8080"
+        environment:
+            DISPLAY_WIDTH: 2000
+            DISPLAY_HEIGHT: 1500
+            RUN_XTERM: "no"
+        networks:
+            - bur-display
+        deploy:
+            restart_policy:
+                condition: none
+
+networks:
+    bur-display:
+        driver: bridge
