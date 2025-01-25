@@ -82,6 +82,7 @@
   <xacro:include filename="hydrodynamics.urdf.xacro"/>
   <xacro:include filename="thruster.urdf.xacro"/>
   <xacro:include filename="imu.urdf.xacro"/>
+  <xacro:include filename="camera.urdf.xacro"/>
 
   <xacro:thruster thruster_id="1">
     <origin xyz="0.1555 -0.15 -0.0725" rpy="0 0 0"/>
@@ -108,6 +109,10 @@
   <xacro:thruster thruster_id="8">
     <origin xyz="${-x_size / 3} ${y_size / 3} 0" rpy="${pi/4} ${-pi/2} 0"/>
   </xacro:thruster>
+
+  <xacro:camera camera_id="1">
+    <origin xyz="0.1 0 0.06" rpy="0 0 0" />
+  </xacro:camera>
 
   <xacro:if value="$(arg simulation)">
     <gazebo>
