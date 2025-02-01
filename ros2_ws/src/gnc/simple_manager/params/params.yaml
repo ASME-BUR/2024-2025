@@ -18,13 +18,7 @@ simple_manager:
       x: 0.0
       y: 0.0
       z: 0.0
-
-    gate_target:
+    gate_position:
       x: 20.0
       y: 0.0
-      z: 0.0
-    
-    buoy_position:
-      x: 10.0
-      y: 10.0
       z: 0.0

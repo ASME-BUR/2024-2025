@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.3) # version on Ubuntu Focal
-project(bur_autonomy)
+project(simple_manager)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -14,7 +14,6 @@ find_package(ament_index_cpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav2_behavior_tree REQUIRED)
-
 find_package(bur_msgs REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -22,9 +21,9 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
     nav2_behavior_tree
     rclcpp
     geometry_msgs
+    bur_msgs
     std_msgs
-    rclcpp_action
-    bur_msgs)
+    rclcpp_action)
 
 # macro to remove some boiler plate
 function(add_target_dependencies target)
@@ -36,9 +35,9 @@ endfunction()
 
 # EXECUTABLES
 
-add_executable(bur_autonomy src/manager_node.cpp src/bt_nodes.cpp)
+add_executable(simple_manager src/manager_node.cpp src/bt_nodes.cpp)
 
-add_target_dependencies(bur_autonomy)
+add_target_dependencies(simple_manager)
 
 #target_include_directories(simple_manager PUBLIC
 #  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -50,7 +49,7 @@ add_target_dependencies(bur_autonomy)
 # ${geometry_msgs_LIBRARIES}
 # )
 
-install(TARGETS bur_autonomy
+install(TARGETS simple_manager
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY behavior_trees launch params
