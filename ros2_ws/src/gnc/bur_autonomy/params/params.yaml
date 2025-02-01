@@ -1,4 +1,4 @@
-simple_manager:
+bur_autonomy:
   ros__parameters:
     localizer_topic: "/odometry/filtered"
     vision_topic: "/vision"

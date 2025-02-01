@@ -132,7 +132,7 @@ int main(int argc, char * argv[])
 
     factory.registerNodeType<GoToTarget>("GoToGate", manager, YOLO_GATE);
     factory.registerNodeType<GoToTarget>("GoToBuoy", manager, YOLO_BUOY);
-    factory.registerNodeType<FireTorpedo>("FireTorpedoes", manager);
+    factory.registerNodeType<FireTorpedo>("FireTorpedo", manager);
 
     manager->initialize_tree(factory);
     manager->initialize_targets();
