@@ -1,117 +1,99 @@
-#include "WaypointFollower.hpp"
+#include "waypoint_follower.hpp"
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
-WaypointFollower::WaypointFollower(ros::NodeHandle& nh) 
-    : nh_(nh), current_waypoint_(0), odom_received_(false) {
+WaypointFollower::WaypointFollower() 
+    : Node("waypoint_follower"), 
+      odom_received_(false),
+      target_received_(false) {
     
-    odom_sub_ = nh_.subscribe("/odometry", 10, &WaypointFollower::odometryCallback, this);
-    wrench_pub_ = nh_.advertise<geometry_msgs::Wrench>("/cmd_wrench", 10);
-
+    odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+        "/odometry/filtered", 10, 
+        std::bind(&WaypointFollower::odometryCallback, this, std::placeholders::_1));
+    
+    next_waypoint_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+        "next_waypoint", 10,
+        std::bind(&WaypointFollower::nextWaypointCallback, this, std::placeholders::_1));
+    
+    waypoints_sub_ = this->create_subscription<nav_msgs::msg::Path>(
+        "waypoints", 10,
+        std::bind(&WaypointFollower::waypointsCallback, this, std::placeholders::_1));
+    
+    wrench_pub_ = this->create_publisher<geometry_msgs::msg::Wrench>("/cmd_wrench", 10);
+    
     loadParameters();
-    loadWaypoints();
-    last_command_time_ = ros::Time::now();
+    last_command_time_ = this->now();
 }
 
 void WaypointFollower::loadParameters() {
     // Load publishing rate
-    nh_.param("publish_rate", publish_rate_, 10.0);
-
+    publish_rate_ = this->declare_parameter("publish_rate", 30.0);
+    
     // Load force and torque limits
-    nh_.param("max_force_x", max_force_x_, 50.0);
-    nh_.param("max_force_y", max_force_y_, 50.0);
-    nh_.param("max_force_z", max_force_z_, 50.0);
-    nh_.param("max_torque_x", max_torque_x_, 10.0);
-    nh_.param("max_torque_y", max_torque_y_, 10.0);
-    nh_.param("max_torque_z", max_torque_z_, 5.0);
+    max_force_x_ = this->declare_parameter("max_force_x", 50.0);
+    max_force_y_ = this->declare_parameter("max_force_y", 50.0);
+    max_force_z_ = this->declare_parameter("max_force_z", 50.0);
+    max_torque_x_ = this->declare_parameter("max_torque_x", 10.0);
+    max_torque_y_ = this->declare_parameter("max_torque_y", 10.0);
+    max_torque_z_ = this->declare_parameter("max_torque_z", 5.0);
 
     // Load PID gains for force
-    nh_.param("kp_force_x", kp_force_x_, 1.0);
-    nh_.param("ki_force_x", ki_force_x_, 0.01);
-    nh_.param("kd_force_x", kd_force_x_, 0.1);
-
-    nh_.param("kp_force_y", kp_force_y_, 1.0);
-    nh_.param("ki_force_y", ki_force_y_, 0.01);
-    nh_.param("kd_force_y", kd_force_y_, 0.1);
-
-    nh_.param("kp_force_z", kp_force_z_, 1.0);
-    nh_.param("ki_force_z", ki_force_z_, 0.01);
-    nh_.param("kd_force_z", kd_force_z_, 0.1);
+    kp_force_x_ = this->declare_parameter("kp_force_x", 1.0);
+    ki_force_x_ = this->declare_parameter("ki_force_x", 0.01);
+    kd_force_x_ = this->declare_parameter("kd_force_x", 0.1);
+    kp_force_y_ = this->declare_parameter("kp_force_y", 1.0);
+    ki_force_y_ = this->declare_parameter("ki_force_y", 0.01);
+    kd_force_y_ = this->declare_parameter("kd_force_y", 0.1);
+    kp_force_z_ = this->declare_parameter("kp_force_z", 1.0);
+    ki_force_z_ = this->declare_parameter("ki_force_z", 0.01);
+    kd_force_z_ = this->declare_parameter("kd_force_z", 0.1);
 
     // Load PID gains for torque
-    nh_.param("kp_torque_x", kp_torque_x_, 0.5);
-    nh_.param("ki_torque_x", ki_torque_x_, 0.005);
-    nh_.param("kd_torque_x", kd_torque_x_, 0.05);
-
-    nh_.param("kp_torque_y", kp_torque_y_, 0.5);
-    nh_.param("ki_torque_y", ki_torque_y_, 0.005);
-    nh_.param("kd_torque_y", kd_torque_y_, 0.05);
-
-    nh_.param("kp_torque_z", kp_torque_z_, 0.5);
-    nh_.param("ki_torque_z", ki_torque_z_, 0.005);
-    nh_.param("kd_torque_z", kd_torque_z_, 0.05);
+    kp_torque_x_ = this->declare_parameter("kp_torque_x", 0.5);
+    ki_torque_x_ = this->declare_parameter("ki_torque_x", 0.005);
+    kd_torque_x_ = this->declare_parameter("kd_torque_x", 0.05);
+    kp_torque_y_ = this->declare_parameter("kp_torque_y", 0.5);
+    ki_torque_y_ = this->declare_parameter("ki_torque_y", 0.005);
+    kd_torque_y_ = this->declare_parameter("kd_torque_y", 0.05);
+    kp_torque_z_ = this->declare_parameter("kp_torque_z", 0.5);
+    ki_torque_z_ = this->declare_parameter("ki_torque_z", 0.005);
+    kd_torque_z_ = this->declare_parameter("kd_torque_z", 0.05);
 
     // Initialize PID controllers
     pid_force_x_.initPid(kp_force_x_, ki_force_x_, kd_force_x_, max_force_x_, -max_force_x_);
     pid_force_y_.initPid(kp_force_y_, ki_force_y_, kd_force_y_, max_force_y_, -max_force_y_);
     pid_force_z_.initPid(kp_force_z_, ki_force_z_, kd_force_z_, max_force_z_, -max_force_z_);
-
     pid_torque_x_.initPid(kp_torque_x_, ki_torque_x_, kd_torque_x_, max_torque_x_, -max_torque_x_);
     pid_torque_y_.initPid(kp_torque_y_, ki_torque_y_, kd_torque_y_, max_torque_y_, -max_torque_y_);
     pid_torque_z_.initPid(kp_torque_z_, ki_torque_z_, kd_torque_z_, max_torque_z_, -max_torque_z_);
 }
 
-bool WaypointFollower::loadWaypoints() {
-    XmlRpc::XmlRpcValue waypoints_list;
-    if (!nh_.getParam("waypoints", waypoints_list)) {
-        ROS_ERROR("Failed to load waypoints from parameter server");
-        return false;
-    }
-
-    if (waypoints_list.getType() != XmlRpc::XmlRpcValue::TypeArray) {
-        ROS_ERROR("Waypoints parameter is not an array");
-        return false;
-    }
-
-    waypoints_.clear();
-    for (int i = 0; i < waypoints_list.size(); ++i) {
-        if (waypoints_list[i].getType() != XmlRpc::XmlRpcValue::TypeArray ||
-            waypoints_list[i].size() != 7) {  // x, y, z, qx, qy, qz, qw
-            ROS_ERROR_STREAM("Invalid waypoint format at index " << i);
-            continue;
-        }
-
-        geometry_msgs::Pose pose;
-        pose.position.x = static_cast<double>(waypoints_list[i][0]);
-        pose.position.y = static_cast<double>(waypoints_list[i][1]);
-        pose.position.z = static_cast<double>(waypoints_list[i][2]);
-        pose.orientation.x = static_cast<double>(waypoints_list[i][3]);
-        pose.orientation.y = static_cast<double>(waypoints_list[i][4]);
-        pose.orientation.z = static_cast<double>(waypoints_list[i][5]);
-        pose.orientation.w = static_cast<double>(waypoints_list[i][6]);
-
-        waypoints_.push_back(pose);
-    }
-
-    return !waypoints_.empty();
+void WaypointFollower::nextWaypointCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {
+    target_pose_ = msg->pose.pose;
+    target_received_ = true;
+    RCLCPP_DEBUG(this->get_logger(), "Received new target waypoint");
 }
 
-void WaypointFollower::odometryCallback(const nav_msgs::Odometry::ConstPtr& msg) {
+void WaypointFollower::waypointsCallback(const nav_msgs::msg::Path::SharedPtr msg) {
+    waypoints_ = msg->poses;
+    RCLCPP_INFO(this->get_logger(), "Received %zu waypoints", waypoints_.size());
+}
+
+void WaypointFollower::odometryCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {
     current_odom_ = *msg;
     odom_received_ = true;
 }
 
-geometry_msgs::Wrench WaypointFollower::computeCommand() {
-    geometry_msgs::Wrench cmd;
-
-    if (waypoints_.empty() || current_waypoint_ >= waypoints_.size()) {
+geometry_msgs::msg::Wrench WaypointFollower::computeCommand() {
+    geometry_msgs::msg::Wrench cmd;
+    if (!target_received_) {
         return cmd;
     }
 
     // Compute position errors
-    double error_x = waypoints_[current_waypoint_].position.x - current_odom_.pose.pose.position.x;
-    double error_y = waypoints_[current_waypoint_].position.y - current_odom_.pose.pose.position.y;
-    double error_z = waypoints_[current_waypoint_].position.z - current_odom_.pose.pose.position.z;
+    double error_x = target_pose_.position.x - current_odom_.pose.pose.position.x;
+    double error_y = target_pose_.position.y - current_odom_.pose.pose.position.y;
+    double error_z = target_pose_.position.z - current_odom_.pose.pose.position.z;
 
     // Convert quaternions to RPY for both current pose and target
     tf2::Quaternion q_current(
@@ -121,10 +103,10 @@ geometry_msgs::Wrench WaypointFollower::computeCommand() {
         current_odom_.pose.pose.orientation.w);
     
     tf2::Quaternion q_target(
-        waypoints_[current_waypoint_].orientation.x,
-        waypoints_[current_waypoint_].orientation.y,
-        waypoints_[current_waypoint_].orientation.z,
-        waypoints_[current_waypoint_].orientation.w);
+        target_pose_.orientation.x,
+        target_pose_.orientation.y,
+        target_pose_.orientation.z,
+        target_pose_.orientation.w);
 
     double roll_current, pitch_current, yaw_current;
     double roll_target, pitch_target, yaw_target;
@@ -137,18 +119,19 @@ geometry_msgs::Wrench WaypointFollower::computeCommand() {
     double error_pitch = pitch_target - pitch_current;
     double error_yaw = yaw_target - yaw_current;
 
-    ros::Duration dt = ros::Time::now() - last_command_time_;
-    last_command_time_ = ros::Time::now();
+    auto now = this->now();
+    rclcpp::Duration dt = now - last_command_time_;
+    last_command_time_ = now;
 
     // Compute forces using PID controllers
-    double force_x = pid_force_x_.computeCommand(error_x, dt);
-    double force_y = pid_force_y_.computeCommand(error_y, dt);
-    double force_z = pid_force_z_.computeCommand(error_z, dt);
+    double force_x = pid_force_x_.computeCommand(error_x, dt.seconds());
+    double force_y = pid_force_y_.computeCommand(error_y, dt.seconds());
+    double force_z = pid_force_z_.computeCommand(error_z, dt.seconds());
 
     // Compute torques using PID controllers
-    double torque_x = pid_torque_x_.computeCommand(error_roll, dt);
-    double torque_y = pid_torque_y_.computeCommand(error_pitch, dt);
-    double torque_z = pid_torque_z_.computeCommand(error_yaw, dt);
+    double torque_x = pid_torque_x_.computeCommand(error_roll, dt.seconds());
+    double torque_y = pid_torque_y_.computeCommand(error_pitch, dt.seconds());
+    double torque_z = pid_torque_z_.computeCommand(error_yaw, dt.seconds());
 
     // Apply force limits
     cmd.force.x = std::max(-max_force_x_, std::min(max_force_x_, force_x));
@@ -164,31 +147,31 @@ geometry_msgs::Wrench WaypointFollower::computeCommand() {
 }
 
 void WaypointFollower::run() {
-    ros::Rate rate(publish_rate_);
-
-    while (ros::ok()) {
-        if (odom_received_) {
-            geometry_msgs::Wrench cmd = computeCommand();
-            wrench_pub_.publish(cmd);
+    auto timer_callback = [this]() -> void {
+        if (odom_received_ && target_received_) {
+            auto cmd = computeCommand();
+            wrench_pub_->publish(cmd);
         }
+    };
 
-        ros::spinOnce();
-        rate.sleep(); 
-    }
+    timer_ = this->create_wall_timer(
+        std::chrono::duration<double>(1.0/publish_rate_),
+        timer_callback);
+
+    rclcpp::spin(this->get_node_base_interface());
 }
 
 int main(int argc, char** argv) {
-    ros::init(argc, argv, "waypoint_follower_node");
-    ros::NodeHandle nh;
-
+    rclcpp::init(argc, argv);
+    auto node = std::make_shared<WaypointFollower>();
+    
     try {
-        WaypointFollower follower(nh);
-        follower.run();
-    }
-    catch (const std::exception& e) {
-        ROS_ERROR_STREAM("Exception in waypoint follower node: " << e.what());
+        node->run();
+    } catch (const std::exception& e) {
+        RCLCPP_ERROR(node->get_logger(), "Exception in waypoint follower node: %s", e.what());
         return 1;
     }
-
+    
+    rclcpp::shutdown();
     return 0;
 }
