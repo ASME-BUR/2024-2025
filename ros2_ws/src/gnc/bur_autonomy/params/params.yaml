@@ -1,4 +1,4 @@
-simple_manager:
+bur_autonomy:
   ros__parameters:
     localizer_topic: "/odometry/filtered"
     vision_topic: "/vision"
@@ -18,7 +18,13 @@ simple_manager:
       x: 0.0
       y: 0.0
       z: 0.0
-    gate_position:
+
+    gate_target:
       x: 20.0
       y: 0.0
+      z: 0.0
+    
+    buoy_position:
+      x: 10.0
+      y: 10.0
       z: 0.0
