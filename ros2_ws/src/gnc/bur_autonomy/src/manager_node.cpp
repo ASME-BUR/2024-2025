@@ -10,9 +10,8 @@ SimpleManager::SimpleManager() : rclcpp::Node::Node("simple_manager")
     this->declare_parameter("localizer_topic", "/odometry/filtered");
     this->declare_parameter("vision_topic", "/vision");
 
-    this->declare_parameter("goal_topic", "/goal_pose");
+    this->declare_parameter("goal_topic", "/des_pose");
     this->declare_parameter("joy_topic", "/joy");
-    this->declare_parameter("waypoint_topic", "/des_pose");
     this->declare_parameter("pub_rate", 10);
 
     this->declare_parameter("behavior_tree", "tree.xml");
@@ -35,8 +34,6 @@ SimpleManager::SimpleManager() : rclcpp::Node::Node("simple_manager")
         this->get_parameter("goal_topic").as_string(), 10);
     joy_pub_ = this->create_publisher<sensor_msgs::msg::Joy>(
         this->get_parameter("joy_topic").as_string(), 10);
-    odometry_pub_ = this->create_publisher<nav_msgs::msg::Odometry>(
-        this->get_parameter("waypoint_topic").as_string(), 10);
 
     pubTimer_ = this->create_wall_timer(
         std::chrono::milliseconds(1000 / pub_rate), 
@@ -47,6 +44,16 @@ SimpleManager::SimpleManager() : rclcpp::Node::Node("simple_manager")
 
     tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+
+
+    this->gate_position_ = std::make_shared<geometry_msgs::msg::Pose>();
+    this->start_position_ = std::make_shared<geometry_msgs::msg::Pose>();
+    this->gate_position_->position.x = 2;
+    this->gate_position_->position.y = 2;
+    this->gate_position_->position.z = 2;
+    this->start_position_->position.x = 0;
+    this->start_position_->position.y = 0;
+    this->start_position_->position.z = 0;
 
 }
 
@@ -130,9 +137,12 @@ int main(int argc, char * argv[])
 
     auto manager = std::make_shared<SimpleManager>();
 
-    factory.registerNodeType<GoToTarget>("GoToGate", manager, YOLO_GATE);
-    factory.registerNodeType<GoToTarget>("GoToBuoy", manager, YOLO_BUOY);
-    factory.registerNodeType<FireTorpedo>("FireTorpedo", manager);
+    factory.registerNodeType<GoToPose>("GoToGate", manager, manager->gate_position_);
+    factory.registerNodeType<GoToPose>("GoToStart", manager, manager->start_position_);
+
+    // factory.registerNodeType<GoToTarget>("GoToGate", manager, YOLO_GATE);
+    // factory.registerNodeType<GoToTarget>("GoToBuoy", manager, YOLO_BUOY);
+    // factory.registerNodeType<FireTorpedo>("FireTorpedo", manager);
 
     manager->initialize_tree(factory);
     manager->initialize_targets();

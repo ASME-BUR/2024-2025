@@ -32,6 +32,12 @@ def generate_launch_description():
             output='screen',
            ),
         Node(
+            package='simple_planner',
+            executable='waypoint_follower_node',
+            name='waypoint_follower_node',
+            output='screen',
+           ),
+        Node(
                 package="tf2_ros",               
                 executable="static_transform_publisher",
                 arguments = ['--x', '0',

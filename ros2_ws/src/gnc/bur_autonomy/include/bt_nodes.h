@@ -14,6 +14,31 @@
 
 #include "manager_node.h"
 
+class GoToPose : public BT::StatefulActionNode
+{
+    public:
+        GoToPose(const std::string& name, const BT::NodeConfiguration& config,
+                   const std::shared_ptr<SimpleManager> ptr,
+                   const std::shared_ptr<geometry_msgs::msg::Pose> pose):
+            BT::StatefulActionNode(name, config),
+            node_(ptr),
+            target_(pose) {}
+
+        static BT::PortsList providedPorts() { return {}; }
+
+        BT::NodeStatus onStart() override   { return this->navigateToTarget(); }
+        BT::NodeStatus onRunning() override { return this->navigateToTarget(); }
+
+        void onHalted() override {}
+    
+    private:
+        BT::NodeStatus navigateToTarget();
+        std::shared_ptr<SimpleManager> node_;
+        std::shared_ptr<geometry_msgs::msg::Pose> target_;
+        double thresh_dist_ = 1.0;
+};
+
+
 class GoToTarget : public BT::StatefulActionNode
 {
     public:

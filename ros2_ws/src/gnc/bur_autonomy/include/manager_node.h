@@ -60,7 +60,9 @@ class SimpleManager : public rclcpp::Node
         void set_goal_pose(geometry_msgs::msg::Pose target_pos) { this->goal_pose_ = target_pos; }
 
         void publish_joy_msg(sensor_msgs::msg::Joy joy_msg) {  this->joy_pub_->publish(joy_msg); }
-        void publish_odometry_msg(nav_msgs::msg::Odometry odometry_msg) { this->odometry_pub_->publish(odometry_msg); }
+
+        std::shared_ptr<geometry_msgs::msg::Pose> gate_position_;
+        std::shared_ptr<geometry_msgs::msg::Pose> start_position_;
 
         std::vector<VisionTarget> vision_targets_;
         std::vector<bur_msgs::msg::CVDetection> detected_;
@@ -75,7 +77,6 @@ class SimpleManager : public rclcpp::Node
         
         rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_pub_;
         rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_pub_;
-        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odometry_pub_;
 
         geometry_msgs::msg::Pose current_pos_;
         geometry_msgs::msg::Twist current_vel_;

@@ -11,6 +11,16 @@
 #include "tf2/LinearMath/Matrix3x3.h"
 #include <tf2/utils.h>
 
+BT::NodeStatus GoToPose::navigateToTarget() {
+    double dist = nav2_util::geometry_utils::euclidean_distance(*target_,
+        this->node_->get_current_position());
+    if(dist > this->thresh_dist_) {
+        this->node_->set_goal_pose(*target_);
+        return BT::NodeStatus::RUNNING;
+    }
+    return BT::NodeStatus::SUCCESS;
+}
+
 BT::NodeStatus GoToTarget::navigateToTarget() {
     VisionTarget target;
     for(int i = 0; i < this->node_->vision_targets_.size(); i++) {
