@@ -90,7 +90,7 @@ geometry_msgs::msg::Wrench WaypointFollower::computeCommand() {
         return cmd;
     }
 
-    // Compute position errors
+    // Compute position errors in world frame
     double error_x = target_pose_.position.x - current_odom_.pose.pose.position.x;
     double error_y = target_pose_.position.y - current_odom_.pose.pose.position.y;
     double error_z = target_pose_.position.z - current_odom_.pose.pose.position.z;
@@ -101,7 +101,7 @@ geometry_msgs::msg::Wrench WaypointFollower::computeCommand() {
         current_odom_.pose.pose.orientation.y,
         current_odom_.pose.pose.orientation.z,
         current_odom_.pose.pose.orientation.w);
-    
+
     tf2::Quaternion q_target(
         target_pose_.orientation.x,
         target_pose_.orientation.y,
@@ -110,9 +110,18 @@ geometry_msgs::msg::Wrench WaypointFollower::computeCommand() {
 
     double roll_current, pitch_current, yaw_current;
     double roll_target, pitch_target, yaw_target;
-    
+
     tf2::Matrix3x3(q_current).getRPY(roll_current, pitch_current, yaw_current);
     tf2::Matrix3x3(q_target).getRPY(roll_target, pitch_target, yaw_target);
+
+    // Rotate the translation error into the robot's local frame
+    tf2::Vector3 error_world(error_x, error_y, error_z);
+    tf2::Vector3 error_body = tf2::quatRotate(q_current.inverse(), error_world);
+
+    // Extract rotated errors
+    double error_x_body = error_body.x();
+    double error_y_body = error_body.y();
+    double error_z_body = error_body.z();
 
     // Compute orientation errors
     double error_roll = roll_target - roll_current;
@@ -123,10 +132,10 @@ geometry_msgs::msg::Wrench WaypointFollower::computeCommand() {
     rclcpp::Duration dt = now - last_command_time_;
     last_command_time_ = now;
 
-    // Compute forces using PID controllers
-    double force_x = pid_force_x_.computeCommand(error_x, dt.seconds());
-    double force_y = pid_force_y_.computeCommand(error_y, dt.seconds());
-    double force_z = pid_force_z_.computeCommand(error_z, dt.seconds());
+    // Compute forces using PID controllers (now using rotated errors)
+    double force_x = pid_force_x_.computeCommand(error_x_body, dt.seconds());
+    double force_y = pid_force_y_.computeCommand(error_y_body, dt.seconds());
+    double force_z = pid_force_z_.computeCommand(error_z_body, dt.seconds());
 
     // Compute torques using PID controllers
     double torque_x = pid_torque_x_.computeCommand(error_roll, dt.seconds());
@@ -134,17 +143,18 @@ geometry_msgs::msg::Wrench WaypointFollower::computeCommand() {
     double torque_z = pid_torque_z_.computeCommand(error_yaw, dt.seconds());
 
     // Apply force limits
-    cmd.force.x = std::max(-max_force_x_, std::min(max_force_x_, force_x));
-    cmd.force.y = std::max(-max_force_y_, std::min(max_force_y_, force_y));
-    cmd.force.z = std::max(-max_force_z_, std::min(max_force_z_, force_z));
+    cmd.force.x = std::clamp(force_x, -max_force_x_, max_force_x_);
+    cmd.force.y = std::clamp(force_y, -max_force_y_, max_force_y_);
+    cmd.force.z = std::clamp(force_z, -max_force_z_, max_force_z_);
 
     // Apply torque limits
-    cmd.torque.x = std::max(-max_torque_x_, std::min(max_torque_x_, torque_x));
-    cmd.torque.y = std::max(-max_torque_y_, std::min(max_torque_y_, torque_y));
-    cmd.torque.z = std::max(-max_torque_z_, std::min(max_torque_z_, torque_z));
+    cmd.torque.x = std::clamp(torque_x, -max_torque_x_, max_torque_x_);
+    cmd.torque.y = std::clamp(torque_y, -max_torque_y_, max_torque_y_);
+    cmd.torque.z = std::clamp(torque_z, -max_torque_z_, max_torque_z_);
 
     return cmd;
 }
+
 
 void WaypointFollower::run() {
     auto timer_callback = [this]() -> void {
