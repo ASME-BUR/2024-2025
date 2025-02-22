@@ -12,8 +12,7 @@
     <BehaviorTree ID="GateTask">
         <SequenceWithMemory>
             <Sequence>
-                <UpdateGateTarget target="{goal}" />
-                <GoToTarget target="{goal}"/>
+                <GoToTarget/>
             </Sequence>
             <BarrelRoll />
             <DriveForward />
@@ -23,8 +22,7 @@
     <BehaviorTree ID="BuoyTask">
         <SequenceWithMemory>
             <Sequence>
-                <UpdateBuoyTarget target="{goal}" />
-                <GoToTarget target="{goal}"/>
+                <GoToTarget/>
             </Sequence>
             <FireTorpedo>
         </SequenceWithMemory>
@@ -33,8 +31,7 @@
     <BehaviorTree ID="OctagonTask">
         <SequenceWithMemory>
             <Sequence>
-                <UpdateOctagonTarget target="{goal}" />
-                <GoToTarget target="{goal}"/>
+                <GoToTarget/>
             </Sequence>
         </SequenceWithMemory>
     </BehaviorTree>

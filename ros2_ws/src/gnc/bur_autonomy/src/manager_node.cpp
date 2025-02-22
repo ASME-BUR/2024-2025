@@ -55,17 +55,32 @@ void SimpleManager::initialize_targets() {
     this->declare_parameter("start_position.y", 0.0);
     this->declare_parameter("start_position.z", 0.0);
 
-    this->declare_parameter("gate_position.x", 5.0);
+    this->declare_parameter("gate_position.x", 20.0);
     this->declare_parameter("gate_position.y", 0.0);
     this->declare_parameter("gate_position.z", 0.0);
 
-    this->start_position_->position.x = this->get_parameter("start_position.x").as_double();
-    this->start_position_->position.y = this->get_parameter("start_position.y").as_double();
-    this->start_position_->position.z = this->get_parameter("start_position.z").as_double();
+    this->declare_parameter("buoy_position.x", 10.0);
+    this->declare_parameter("buoy_position.y", 10.0);
+    this->declare_parameter("buoy_position.z", 0.0);
 
-    this->gate_position_->position.x = this->get_parameter("gate_position.x").as_double();
-    this->gate_position_->position.y = this->get_parameter("gate_position.y").as_double();
-    this->gate_position_->position.z = this->get_parameter("gate_position.z").as_double();
+    geometry_msgs::msg::Pose start_pose;
+    start_pose.position.x = this->get_parameter("start_position.x").as_double();
+    start_pose.position.y = this->get_parameter("start_position.y").as_double();
+    start_pose.position.z = this->get_parameter("start_position.z").as_double();
+    this->set_current_position(start_pose);
+
+    VisionTarget gate_target(YOLO_GATE);
+    gate_target.p_.position.x = this->get_parameter("gate_position.x").as_double();
+    gate_target.p_.position.y = this->get_parameter("gate_position.y").as_double();
+    gate_target.p_.position.z = this->get_parameter("gate_position.z").as_double();   
+
+    VisionTarget buoy_target(YOLO_BUOY);
+    buoy_target.p_.position.x = this->get_parameter("buoy_position.x").as_double();
+    buoy_target.p_.position.y = this->get_parameter("buoy_position.y").as_double();
+    buoy_target.p_.position.z = this->get_parameter("buoy_position.z").as_double();   
+
+    this->vision_targets_.push_back(gate_target);
+    this->vision_targets_.push_back(buoy_target);
 }
 
 void SimpleManager::initialize_tree(BT::BehaviorTreeFactory &factory) {
@@ -86,39 +101,7 @@ void SimpleManager::localizer_callback(const nav_msgs::msg::Odometry::SharedPtr 
 
 void SimpleManager::vision_callback(const bur_msgs::msg::CVDetections::SharedPtr msg) {
     this->detected_ = msg->detected;
-
-    if(!gate_complete) {
-        bur_msgs::msg::CVDetection buoy_detection;
-
-        for(int i = 0; i<this->detected_.size(); i++) {
-            if(this->detected_[i].label == YOLO_BUOY) {
-                if(this->detected_[i].bbox.pose.position.x > ZED_WIDTH / 2) {
-                    this->buoy_is_left_ = false;
-                } else {
-                    this->buoy_is_left_ = true;
-                }
-                break;
-            }
-        }
-    }
 }
-
-void SimpleManager::depth_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
-    this->depth = msg->pose.pose.position.z;
-}
-
-void SimpleManager::set_goal_pose(geometry_msgs::msg::Pose target_pos) {
-    this->goal_pose_ = target_pos;
-}
-
-void SimpleManager::publish_joy_msg(sensor_msgs::msg::Joy joy_msg) {
-    this->joy_pub_->publish(joy_msg);
-}
-
-void SimpleManager::publish_odometry_msg(nav_msgs::msg::Odometry odometry_msg) {
-    this->odometry_pub_->publish(odometry_msg);
-}
-
 
 void SimpleManager::publish_goal_pose() {
     geometry_msgs::msg::PoseStamped msg;
@@ -141,78 +124,18 @@ void SimpleManager::tick_behavior() {
 
 int main(int argc, char * argv[])
 {
-
     rclcpp::init(argc, argv);
 
     BT::BehaviorTreeFactory factory;
 
     auto manager = std::make_shared<SimpleManager>();
 
-    sensor_msgs::msg::Joy submerge_msg;
-
-    std::vector<double> values(9, 0);
-    std::vector<int> buttons(10, 0);
-
-    values[2] = -0.7;
-    buttons[9] = 1;
-    for (size_t i = 0; i < values.size(); i++) {
-            submerge_msg.axes.push_back(values[i]);
-    }
-    for (size_t i = 0; i < buttons.size(); i++) {
-            submerge_msg.buttons.push_back(buttons[i]);
-    }
-
-    sensor_msgs::msg::Joy forward_msg;
-
-    values = std::vector<double>(9, 0);
-    buttons = std::vector<int>(10, 0);
-    
-    values[2] = -0.7;
-    values[0] = 1.0;
-    buttons[9] = 1;
-    for (size_t i = 0; i < values.size(); i++) {
-            forward_msg.axes.push_back(values[i]);
-    }
-    for (size_t i = 0; i < buttons.size(); i++) {
-            forward_msg.buttons.push_back(buttons[i]);
-    }
-
-    sensor_msgs::msg::Joy yaw_roll_msg;
-
-    values = std::vector<double>(9, 0);
-    buttons = std::vector<int>(10, 0);
-
-    values[5] = -1.0;
-    values[0] = 1.0;
-    buttons[9] = 1;
-    for (size_t i = 0; i < values.size(); i++) {
-            yaw_roll_msg.axes.push_back(values[i]);
-    }
-    for (size_t i = 0; i < buttons.size(); i++) {
-            yaw_roll_msg.buttons.push_back(buttons[i]);
-    }
-
-    tf2::Quaternion rotate_left_45;
-    rotate_left_45.setRPY(0.0, 0.0, 0.785);
-
-    tf2::Quaternion zigzag_right_turn;
-    zigzag_right_turn.setRPY(0.0, 0.0, -0.785 - 1.1071);
-
-    tf2::Quaternion zigzag_left_turn;
-    zigzag_left_turn.setRPY(0.0, 0.0, 2 * 1.1071);
-
-    auto empty_msg = sensor_msgs::msg::Joy();
-
-    factory.registerNodeType<DriveForDurationBlackboard>("Wait", manager, empty_msg);
-    factory.registerNodeType<DriveForDurationBlackboard>("Submerge", manager, submerge_msg);
-    factory.registerNodeType<DriveForDurationBlackboard>("DriveForward", manager, forward_msg);
-    factory.registerNodeType<DriveForDurationBlackboard>("YawRoll", manager, yaw_roll_msg);
-
-    factory.registerNodeType<TurnFromCurrentPositionBlackboard>("TurnFromCurrentPosition", manager);
-
-    factory.registerNodeType<FireTorpedo>("FireTorpedoes", manager);
+    factory.registerNodeType<GoToTarget>("GoToGate", manager, YOLO_GATE);
+    factory.registerNodeType<GoToTarget>("GoToBuoy", manager, YOLO_BUOY);
+    factory.registerNodeType<FireTorpedo>("FireTorpedo", manager);
 
     manager->initialize_tree(factory);
+    manager->initialize_targets();
 
     rclcpp::spin(manager);
 
