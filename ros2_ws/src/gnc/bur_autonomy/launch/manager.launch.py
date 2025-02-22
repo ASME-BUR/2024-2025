@@ -8,9 +8,9 @@ from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
-    manager_dir = get_package_share_directory('simple_manager')
+    manager_dir = get_package_share_directory('bur_autonomy')
     params_file = os.path.join(manager_dir, 'params', 'params.yaml')
-    bt_file = os.path.join(manager_dir, 'behavior_trees', 'real_comp_tree.xml')
+    bt_file = os.path.join(manager_dir, 'behavior_trees', 'qualification_tree.xml')
 
     configured_params = RewrittenYaml(
         source_file=params_file,
@@ -22,9 +22,9 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     node = Node(
-            package="simple_manager",
-            executable="simple_manager",
-            name="simple_manager",
+            package="bur_autonomy",
+            executable="bur_autonomy",
+            name="bur_autonomy",
             parameters=[configured_params],
             arguments=[],
         )

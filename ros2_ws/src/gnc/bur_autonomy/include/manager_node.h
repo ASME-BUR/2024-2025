@@ -27,6 +27,24 @@ const int YOLO_BUOY = 1;
 const int ZED_WIDTH = 1920;
 const int ZED_HEIGHT = 1080;
 
+struct VisionTarget
+{
+    public:
+        VisionTarget() {};
+        VisionTarget(int target_id) : id_(target_id) {};
+        VisionTarget(int target_id, geometry_msgs::msg::Pose p) : 
+            id_(target_id), p_(p) {};
+
+        void updatePose(geometry_msgs::msg::Pose p) { this->p_ = p; }
+        void updateVelocity(geometry_msgs::msg::Twist vel) { this->vel_ = vel;}
+
+        geometry_msgs::msg::Pose p_;
+        geometry_msgs::msg::Twist vel_;
+
+        int id_;
+        bool detected_ = false;
+};
+
 class SimpleManager : public rclcpp::Node
 {
     public:
@@ -35,20 +53,18 @@ class SimpleManager : public rclcpp::Node
         void initialize_tree(BT::BehaviorTreeFactory &factory);
         void initialize_targets();
 
-        geometry_msgs::msg::Pose const getCurrentPosition() { return current_pos_; }
+        geometry_msgs::msg::Pose const get_current_position() { return current_pos_; }
+        void set_current_position(geometry_msgs::msg::Pose p) { this->current_pos_ = p; }
 
-        void set_goal_pose(geometry_msgs::msg::Pose target_pos);
-        void publish_joy_msg(sensor_msgs::msg::Joy joy_msg);
-        void publish_odometry_msg(nav_msgs::msg::Odometry);
+        geometry_msgs::msg::Pose get_goal_pose() { return this->goal_pose_; }
+        void set_goal_pose(geometry_msgs::msg::Pose target_pos) { this->goal_pose_ = target_pos; }
 
-        // Target Locations
-        std::shared_ptr<geometry_msgs::msg::Pose> start_position_;
+        void publish_joy_msg(sensor_msgs::msg::Joy joy_msg) {  this->joy_pub_->publish(joy_msg); }
+
         std::shared_ptr<geometry_msgs::msg::Pose> gate_position_;
-        std::vector<geometry_msgs::msg::Pose> marker_poses_;
+        std::shared_ptr<geometry_msgs::msg::Pose> start_position_;
 
-        bool buoy_is_left_ = true;
-        bool gate_complete = false;
-
+        std::vector<VisionTarget> vision_targets_;
         std::vector<bur_msgs::msg::CVDetection> detected_;
 
     private:
@@ -61,15 +77,12 @@ class SimpleManager : public rclcpp::Node
         
         rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_pub_;
         rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_pub_;
-        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odometry_pub_;
-
 
         geometry_msgs::msg::Pose current_pos_;
         geometry_msgs::msg::Twist current_vel_;
+        geometry_msgs::msg::TransformStamped baselink2Odom;
 
         geometry_msgs::msg::Pose goal_pose_;
-
-        geometry_msgs::msg::TransformStamped baselink2Odom;
 
         std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
         std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -85,7 +98,9 @@ class SimpleManager : public rclcpp::Node
         void publish_goal_pose();
         void localizer_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
         void vision_callback(const bur_msgs::msg::CVDetections::SharedPtr msg);
-        void depth_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
+        void depth_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
+            this->depth = msg->pose.pose.position.z;
+        }
 };
 
 #endif

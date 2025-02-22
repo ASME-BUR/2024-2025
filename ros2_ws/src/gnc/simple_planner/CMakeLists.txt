@@ -41,6 +41,7 @@ target_include_directories(waypoint_follower_node
 ament_target_dependencies(waypoint_follower_node tf2 tf2_geometry_msgs nav_msgs rclcpp control_toolbox)
 
 install(TARGETS planner_node DESTINATION lib/${PROJECT_NAME})
+install(TARGETS waypoint_follower_node DESTINATION lib/${PROJECT_NAME})
 
 # Install launch files.
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)
