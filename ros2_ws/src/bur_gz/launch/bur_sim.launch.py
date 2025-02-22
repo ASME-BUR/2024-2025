@@ -108,6 +108,19 @@ def generate_launch_description():
         ],
         output='screen'
     )
+    absolute_position_bridge = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
+            '/model/bur/pose@geometry_msgs/msg/Pose@ignition.msgs.Pose'
+        ],
+        output='screen'
+    )
+    thruster_midware = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'bur_gz', 'midware'
+        ],
+        output='screen'
+    )
 
     return LaunchDescription([
         # Launch gazebo environment
@@ -120,6 +133,7 @@ def generate_launch_description():
         node_robot_state_publisher,
         gz_spawn_entity,
 
+
         # Thruster bridges
         thruster1_bridge,
         thruster2_bridge,
@@ -129,7 +143,10 @@ def generate_launch_description():
         thruster6_bridge,
         thruster7_bridge,
         thruster8_bridge,
+
         imu_bridge,
+        absolute_position_bridge,
+        thruster_midware,
 
         # Launch Arguments
         DeclareLaunchArgument(

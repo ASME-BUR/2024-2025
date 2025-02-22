@@ -45,6 +45,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'midware = bur_gz.thruster_middleware:main'
         ],
     },
 )

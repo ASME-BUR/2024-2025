@@ -10,22 +10,21 @@ class ThrusterMiddleware(Node):
 
         self.thruster_cmd_listener = self.create_subscription(
             ThrusterCommand,
-            'thrust/cmd_pub_topic',
+            '/thrust/cmd_pub_topic',
             self.listener_callback,
             10)
 
         self.thruster_pub = []
 
         for i in range(8):
-            thruster_pub.append(self.create_publisher(Float64, '/model/bur/joint/thruster{}/cmd_pos'.format(i), 10))
+            self.thruster_pub.append(self.create_publisher(Float64, '/model/bur/joint/thruster{}/cmd_pos'.format(i), 10))
 
-        self.subscription
 
     def listener_callback(self, thrust_cmd):
         msg = Float64()
         for i in range(8):
-            msg.data = thrust_cmd.data.thrusters[i]
-            thruster_pub[i].publish(msg)
+            msg.data = thrust_cmd.thrusters[i]
+            self.thruster_pub[i].publish(msg)
 
 def main(args=None):
     rclpy.init(args=args)
