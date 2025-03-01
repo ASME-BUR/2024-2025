@@ -3,36 +3,38 @@
         <SequenceWithMemory>
             <RetryUntilSuccessful num_attempts="6">
                 <SubTree ID="GateTask"/>
-                <SubTree ID="BuoyTask"/>
+                <SubTree ID="TorpedoTask"/>
                 <SubTree ID="OctagonTask"/>
+                <SubTree ID="ReturnToStart"/>
             </RetryUntilSuccessful>
         </SequenceWithMemory>
     </BehaviorTree>
 
     <BehaviorTree ID="GateTask">
         <SequenceWithMemory>
-            <Sequence>
-                <GoToTarget/>
-            </Sequence>
-            <BarrelRoll />
-            <DriveForward />
+            <GoToGate/>
+            <BarrelRoll/>
+            <DriveForward/>
         </SequenceWithMemory>
     </BehaviorTree>
 
-    <BehaviorTree ID="BuoyTask">
+    <BehaviorTree ID="TorpedoTask">
         <SequenceWithMemory>
-            <Sequence>
-                <GoToTarget/>
-            </Sequence>
-            <FireTorpedo>
+            <GoToTorpedoTarget/>
+            <FireTorpedo/>
         </SequenceWithMemory>
     </BehaviorTree>
 
     <BehaviorTree ID="OctagonTask">
         <SequenceWithMemory>
-            <Sequence>
-                <GoToTarget/>
-            </Sequence>
+            <GoToOctagon/>
+        </SequenceWithMemory>
+    </BehaviorTree>
+
+    <BehaviorTree ID="ReturnToStart">
+        <SequenceWithMemory>
+            <GoToGate/>
+            <GoToStart/>
         </SequenceWithMemory>
     </BehaviorTree>
  </root>

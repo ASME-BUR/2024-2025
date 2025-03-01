@@ -11,32 +11,27 @@
 #include "tf2/LinearMath/Matrix3x3.h"
 #include <tf2/utils.h>
 
-BT::NodeStatus GoToPose::navigateToTarget() {
-    double dist = nav2_util::geometry_utils::euclidean_distance(*target_,
+BT::NodeStatus BTNavigationNode::navigateToTarget() {
+    geometry_msgs::msg::Pose target = this->getTargetPosition();
+    double dist = nav2_util::geometry_utils::euclidean_distance(target,
         this->node_->get_current_position());
     if(dist > this->thresh_dist_) {
-        this->node_->set_goal_pose(*target_);
+        this->node_->set_goal_pose(target);
         return BT::NodeStatus::RUNNING;
     }
     return BT::NodeStatus::SUCCESS;
 }
 
-BT::NodeStatus GoToTarget::navigateToTarget() {
+geometry_msgs::msg::Pose GoToTarget::getTargetPosition() {
     VisionTarget target;
-    for(int i = 0; i < this->node_->vision_targets_.size(); i++) {
-        if(this->node_->vision_targets_[i].id_ == this->target_id_) {
-            target = this->node_->vision_targets_[i];
+    auto targets = this->getNode()->vision_targets_;
+    for(int i = 0; i < targets.size(); i++) {
+        if(targets[i].id_ == this->target_id_) {
+            target = targets[i];
             break;
         }
     }
-
-    double dist = nav2_util::geometry_utils::euclidean_distance(target.p_,
-        this->node_->get_current_position());
-    if(dist > this->thresh_dist_) {
-        this->node_->set_goal_pose(target.p_);
-        return BT::NodeStatus::RUNNING;
-    }
-    return BT::NodeStatus::SUCCESS;
+    return target.p_;
 }
 
 

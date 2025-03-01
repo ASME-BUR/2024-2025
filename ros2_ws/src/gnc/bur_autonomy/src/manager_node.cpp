@@ -17,7 +17,7 @@ SimpleManager::SimpleManager() : rclcpp::Node::Node("simple_manager")
     this->declare_parameter("behavior_tree", "tree.xml");
     this->declare_parameter("tick_rate", 10);
 
-    this->declare_parameter("auto_shutdown", true);
+    this->declare_parameter("shutdown_on_end", true);
     this->declare_parameter("wait_for_depth", false);
 
     int pub_rate = this->get_parameter("pub_rate").as_int();

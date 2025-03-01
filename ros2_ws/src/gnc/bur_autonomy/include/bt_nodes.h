@@ -14,53 +14,57 @@
 
 #include "manager_node.h"
 
-class GoToPose : public BT::StatefulActionNode
+class BTNavigationNode : public BT::StatefulActionNode
+{
+    public:
+        BTNavigationNode(const std::string& name, const BT::NodeConfiguration& config,
+                   const std::shared_ptr<SimpleManager> ptr):
+            BT::StatefulActionNode(name, config),
+            node_(ptr) {}
+
+        static BT::PortsList providedPorts() { return {}; }
+
+        BT::NodeStatus onStart() override   { return this->navigateToTarget(); }
+        BT::NodeStatus onRunning() override { return this->navigateToTarget(); }
+        void onHalted() override {}
+
+        std::shared_ptr<SimpleManager> getNode() { return this->node_; }
+    
+    private:
+        virtual geometry_msgs::msg::Pose getTargetPosition() = 0;
+        BT::NodeStatus navigateToTarget();
+
+        std::shared_ptr<SimpleManager> node_;
+        double thresh_dist_ = 1.0;
+};
+
+class GoToPose : public BTNavigationNode
 {
     public:
         GoToPose(const std::string& name, const BT::NodeConfiguration& config,
                    const std::shared_ptr<SimpleManager> ptr,
                    const std::shared_ptr<geometry_msgs::msg::Pose> pose):
-            BT::StatefulActionNode(name, config),
-            node_(ptr),
+            BTNavigationNode(name, config, ptr),
             target_(pose) {}
 
-        static BT::PortsList providedPorts() { return {}; }
-
-        BT::NodeStatus onStart() override   { return this->navigateToTarget(); }
-        BT::NodeStatus onRunning() override { return this->navigateToTarget(); }
-
-        void onHalted() override {}
-    
     private:
-        BT::NodeStatus navigateToTarget();
-        std::shared_ptr<SimpleManager> node_;
+        geometry_msgs::msg::Pose getTargetPosition() { return *target_; }
         std::shared_ptr<geometry_msgs::msg::Pose> target_;
-        double thresh_dist_ = 1.0;
 };
 
 
-class GoToTarget : public BT::StatefulActionNode
+class GoToTarget : public BTNavigationNode
 {
     public:
         GoToTarget(const std::string& name, const BT::NodeConfiguration& config,
                    const std::shared_ptr<SimpleManager> ptr,
                    const int target_id):
-            BT::StatefulActionNode(name, config),
-            node_(ptr),
+            BTNavigationNode(name, config, ptr),
             target_id_(target_id) {}
 
-        static BT::PortsList providedPorts() { return {}; }
-
-        BT::NodeStatus onStart() override   { return this->navigateToTarget(); }
-        BT::NodeStatus onRunning() override { return this->navigateToTarget(); }
-
-        void onHalted() override {}
-    
     private:
-        BT::NodeStatus navigateToTarget();
-        std::shared_ptr<SimpleManager> node_;
+        geometry_msgs::msg::Pose getTargetPosition();
         int target_id_;
-        double thresh_dist_ = 1.0;
 };
 
 
