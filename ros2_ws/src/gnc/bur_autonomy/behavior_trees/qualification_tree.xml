@@ -15,6 +15,9 @@
             <Sequence>
                 <GoToGate/>
             </Sequence>
+            <Sequence>
+                <GoToStart/>
+            </Sequence>
         </SequenceWithMemory>
     </BehaviorTree>
  </root>

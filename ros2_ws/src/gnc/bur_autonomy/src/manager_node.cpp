@@ -34,6 +34,8 @@ SimpleManager::SimpleManager() : rclcpp::Node::Node("simple_manager")
         this->get_parameter("goal_topic").as_string(), 10);
     joy_pub_ = this->create_publisher<sensor_msgs::msg::Joy>(
         this->get_parameter("joy_topic").as_string(), 10);
+    obstacle_pub_ = this->create_publisher<std_msgs::msg::Float32MultiArray>(
+        "/obstacles", 10);
 
     pubTimer_ = this->create_wall_timer(
         std::chrono::milliseconds(1000 / pub_rate), 
@@ -44,17 +46,6 @@ SimpleManager::SimpleManager() : rclcpp::Node::Node("simple_manager")
 
     tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
-
-
-    this->gate_position_ = std::make_shared<geometry_msgs::msg::Pose>();
-    this->start_position_ = std::make_shared<geometry_msgs::msg::Pose>();
-    this->gate_position_->position.x = 2;
-    this->gate_position_->position.y = 2;
-    this->gate_position_->position.z = 2;
-    this->start_position_->position.x = 0;
-    this->start_position_->position.y = 0;
-    this->start_position_->position.z = 0;
-
 }
 
 void SimpleManager::initialize_targets() {
@@ -114,6 +105,21 @@ void SimpleManager::publish_goal_pose() {
     geometry_msgs::msg::PoseStamped msg;
     msg.pose = this->goal_pose_;
     this->goal_pose_pub_->publish(msg);
+
+    std_msgs::msg::Float32MultiArray obstacle_msg;
+    obstacle_msg.layout.dim.push_back(std_msgs::msg::MultiArrayDimension());
+    obstacle_msg.layout.dim.push_back(std_msgs::msg::MultiArrayDimension());
+    obstacle_msg.layout.dim[0].label = "height";
+    obstacle_msg.layout.dim[0].size = 1;
+    obstacle_msg.layout.dim[0].stride = 1*5;
+    obstacle_msg.layout.dim[1].label = "width";
+    obstacle_msg.layout.dim[1].size = 5;
+    obstacle_msg.layout.dim[1].stride = 5;
+    obstacle_msg.layout.data_offset = 0;
+
+    std::vector<float> vec = { 1, 1, 1, 0.5, 0.5 };
+    obstacle_msg.data = vec;
+    this->obstacle_pub_->publish(obstacle_msg);
 }
 
 void SimpleManager::tick_behavior() {
@@ -121,7 +127,7 @@ void SimpleManager::tick_behavior() {
     BT::NodeStatus status = this->behavior_tree_.tickOnce();
 
     if(status == BT::NodeStatus::SUCCESS &&
-        this->get_parameter("auto_shutdown").as_bool()) {
+        this->get_parameter("shutdown_on_end").as_bool()) {
         rclcpp::shutdown();
     } else if (status == BT::NodeStatus::FAILURE) {
         RCLCPP_INFO(this->get_logger(), "Tree failed");
@@ -137,12 +143,10 @@ int main(int argc, char * argv[])
 
     auto manager = std::make_shared<SimpleManager>();
 
-    factory.registerNodeType<GoToPose>("GoToGate", manager, manager->gate_position_);
-    factory.registerNodeType<GoToPose>("GoToStart", manager, manager->start_position_);
+    factory.registerNodeType<GoToTarget>("GoToGate", manager, YOLO_GATE);
+    factory.registerNodeType<GoToPose>("GoToStart", manager, std::make_shared<geometry_msgs::msg::Pose>(manager->start_position_));
 
-    // factory.registerNodeType<GoToTarget>("GoToGate", manager, YOLO_GATE);
-    // factory.registerNodeType<GoToTarget>("GoToBuoy", manager, YOLO_BUOY);
-    // factory.registerNodeType<FireTorpedo>("FireTorpedo", manager);
+    factory.registerNodeType<FireTorpedo>("FireTorpedo", manager);
 
     manager->initialize_tree(factory);
     manager->initialize_targets();

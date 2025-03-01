@@ -13,6 +13,8 @@
 #include "nav_msgs/msg/odometry.hpp"
 #include "sensor_msgs/msg/joy.hpp"
 
+#include "std_msgs/msg/float32_multi_array.hpp"
+
 #include "bur_msgs/msg/cv_detection.hpp"
 #include "bur_msgs/msg/cv_detections.hpp"
 
@@ -36,10 +38,10 @@ struct VisionTarget
             id_(target_id), p_(p) {};
 
         void updatePose(geometry_msgs::msg::Pose p) { this->p_ = p; }
-        void updateVelocity(geometry_msgs::msg::Twist vel) { this->vel_ = vel;}
+        // void updateVelocity(geometry_msgs::msg::Twist vel) { this->vel_ = vel;}
 
         geometry_msgs::msg::Pose p_;
-        geometry_msgs::msg::Twist vel_;
+        // geometry_msgs::msg::Twist vel_;
 
         int id_;
         bool detected_ = false;
@@ -61,8 +63,7 @@ class SimpleManager : public rclcpp::Node
 
         void publish_joy_msg(sensor_msgs::msg::Joy joy_msg) {  this->joy_pub_->publish(joy_msg); }
 
-        std::shared_ptr<geometry_msgs::msg::Pose> gate_position_;
-        std::shared_ptr<geometry_msgs::msg::Pose> start_position_;
+        geometry_msgs::msg::Pose start_position_;
 
         std::vector<VisionTarget> vision_targets_;
         std::vector<bur_msgs::msg::CVDetection> detected_;
@@ -77,6 +78,7 @@ class SimpleManager : public rclcpp::Node
         
         rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_pub_;
         rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_pub_;
+        rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr obstacle_pub_;
 
         geometry_msgs::msg::Pose current_pos_;
         geometry_msgs::msg::Twist current_vel_;
