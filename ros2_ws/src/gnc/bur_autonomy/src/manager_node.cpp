@@ -119,7 +119,7 @@ void SimpleManager::publish_goal_pose() {
 
     std::vector<float> vec = { 1, 1, 1, 0.5, 0.5 };
     obstacle_msg.data = vec;
-    this->obstacle_pub_->publish(obstacle_msg);
+    // this->obstacle_pub_->publish(obstacle_msg);
 }
 
 void SimpleManager::tick_behavior() {

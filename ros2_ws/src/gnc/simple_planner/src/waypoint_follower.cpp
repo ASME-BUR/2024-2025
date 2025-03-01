@@ -71,7 +71,7 @@ void WaypointFollower::loadParameters() {
 void WaypointFollower::nextWaypointCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {
     target_pose_ = msg->pose.pose;
     target_received_ = true;
-    RCLCPP_DEBUG(this->get_logger(), "Received new target waypoint");
+    RCLCPP_INFO(this->get_logger(), "Received new target waypoint");
 }
 
 void WaypointFollower::waypointsCallback(const nav_msgs::msg::Path::SharedPtr msg) {
@@ -132,15 +132,19 @@ geometry_msgs::msg::Wrench WaypointFollower::computeCommand() {
     rclcpp::Duration dt = now - last_command_time_;
     last_command_time_ = now;
 
+    RCLCPP_INFO(this->get_logger(), "x_error: %f", error_x_body);
+
     // Compute forces using PID controllers (now using rotated errors)
-    double force_x = pid_force_x_.computeCommand(error_x_body, dt.seconds());
-    double force_y = pid_force_y_.computeCommand(error_y_body, dt.seconds());
-    double force_z = pid_force_z_.computeCommand(error_z_body, dt.seconds());
+    double force_x = pid_force_x_.computeCommand(error_x_body, dt.nanoseconds());
+    double force_y = pid_force_y_.computeCommand(error_y_body, dt.nanoseconds());
+    double force_z = pid_force_z_.computeCommand(error_z_body, dt.nanoseconds());
 
     // Compute torques using PID controllers
-    double torque_x = pid_torque_x_.computeCommand(error_roll, dt.seconds());
-    double torque_y = pid_torque_y_.computeCommand(error_pitch, dt.seconds());
-    double torque_z = pid_torque_z_.computeCommand(error_yaw, dt.seconds());
+    double torque_x = pid_torque_x_.computeCommand(error_roll, dt.nanoseconds());
+    double torque_y = pid_torque_y_.computeCommand(error_pitch, dt.nanoseconds());
+    double torque_z = pid_torque_z_.computeCommand(error_yaw, dt.nanoseconds());
+
+    RCLCPP_INFO(this->get_logger(), "x_force: %f", force_x);
 
     // Apply force limits
     cmd.force.x = std::clamp(force_x, -max_force_x_, max_force_x_);
