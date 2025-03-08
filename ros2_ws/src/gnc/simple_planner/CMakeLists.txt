@@ -18,6 +18,7 @@ find_package(joy REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(control_toolbox REQUIRED)
 
 include_directories(include/${PROJECT_NAME})
 
@@ -30,7 +31,17 @@ target_include_directories(planner_node
 )
 ament_target_dependencies(planner_node tf2 tf2_geometry_msgs nav_msgs rclcpp)
 
+add_executable(waypoint_follower_node src/waypoint_follower.cpp)
+target_link_libraries(waypoint_follower_node Eigen3::Eigen)
+# Include directories for Eigen
+target_include_directories(waypoint_follower_node
+  PRIVATE
+    ${EIGEN3_INCLUDE_DIR}
+)
+ament_target_dependencies(waypoint_follower_node tf2 tf2_geometry_msgs nav_msgs rclcpp control_toolbox)
+
 install(TARGETS planner_node DESTINATION lib/${PROJECT_NAME})
+install(TARGETS waypoint_follower_node DESTINATION lib/${PROJECT_NAME})
 
 # Install launch files.
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)

@@ -10,12 +10,13 @@
     <BehaviorTree ID="GateTask">
         <SequenceWithMemory>
             <Sequence>
-                <UpdateStartTarget target="{goal}" />
-                <GoToTarget target="{goal}"/>
+                <GoToStart/>
             </Sequence>
             <Sequence>
-                <UpdateGateTarget target="{goal}" />
-                <GoToTarget target="{goal}"/>
+                <GoToGate/>
+            </Sequence>
+            <Sequence>
+                <GoToStart/>
             </Sequence>
         </SequenceWithMemory>
     </BehaviorTree>

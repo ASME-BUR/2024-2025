@@ -14,6 +14,7 @@
   <depend>tf2_geometry_msgs</depend>
   <depend>rclcpp</depend>
   <depend>eigen3</depend>
+  <depend>control_toolbox</depend>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

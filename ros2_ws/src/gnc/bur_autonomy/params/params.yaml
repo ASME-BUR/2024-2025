@@ -3,15 +3,14 @@ bur_autonomy:
     localizer_topic: "/odometry/filtered"
     vision_topic: "/vision"
     
-    goal_topic: "/goal_pose"
+    goal_topic: "/des_pose"
     joy_topic: "/joy"
-    waypoint_topic: "/des_pose"
     pub_rate: 10
 
     behavior_tree: "manager.launch.py should replace me"
     tick_rate: 10
 
-    auto_shutdown: true
+    shutdown_on_end: true
     wait_for_depth: false
 
     start_position:
