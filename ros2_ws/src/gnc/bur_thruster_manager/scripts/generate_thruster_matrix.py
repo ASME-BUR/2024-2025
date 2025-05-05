@@ -30,8 +30,8 @@ class CoordinateSystems(enum.IntEnum):
 if __name__ == '__main__':
     # Can calculate using whatever coordinate system (NED, NWU, ENU), just be consistent
     coordinate_system_in = CoordinateSystems.ENU
-    coordinate_system_out = CoordinateSystems.ENU
-    output_filename = 'motor_force_config_ENU.yaml'
+    coordinate_system_out = CoordinateSystems.NWU
+    output_filename = 'motor_force_config_NWU.yaml'
 
     # Full path to the output file
     output_path = os.path.join(os.getcwd(), f'../config/{output_filename}')
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     thruster_locations = thruster_locations * 1000 * (25.4) # Inches to mm :(
 
     # Prevents up/down thrusters from having nonzero surge/sway
-    # thruster_locations[:, 2] = 0
+    thruster_locations[:, 2] = 0
 
     deg = 45
     s = np.sin(np.deg2rad(deg))

@@ -1,0 +1,71 @@
+thruster_manager:
+  ros__parameters:
+    flip_motors:
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    max_force: 60.0
+    max_torque: 40.0
+    motor0:
+      heave: -0.0
+      pitch: 0.0
+      roll: 0.0
+      surge: 0.355076
+      sway: -0.3583
+      yaw: -0.000705
+    motor1:
+      heave: -0.285579
+      pitch: 0.003426
+      roll: -0.001022
+      surge: -0.0
+      sway: -0.0
+      yaw: -0.0
+    motor2:
+      heave: -0.0
+      pitch: 0.0
+      roll: -0.0
+      surge: -0.352029
+      sway: -0.358307
+      yaw: -0.000706
+    motor3:
+      heave: 0.281604
+      pitch: -0.003445
+      roll: -0.001026
+      surge: -0.0
+      sway: 0.0
+      yaw: 0.0
+    motor4:
+      heave: 0.0
+      pitch: -0.0
+      roll: 0.0
+      surge: -0.355078
+      sway: -0.3488
+      yaw: 0.000706
+    motor5:
+      heave: 0.218509
+      pitch: 0.003433
+      roll: 0.001024
+      surge: 0.0
+      sway: -0.0
+      yaw: -0.0
+    motor6:
+      heave: -0.0
+      pitch: 0.0
+      roll: -0.0
+      surge: -0.352031
+      sway: 0.348807
+      yaw: -0.000705
+    motor7:
+      heave: -0.214308
+      pitch: -0.003438
+      roll: 0.00102
+      surge: 0.0
+      sway: -0.0
+      yaw: -0.0
+    num_motors: 8
+    rate_limit: 0.3
