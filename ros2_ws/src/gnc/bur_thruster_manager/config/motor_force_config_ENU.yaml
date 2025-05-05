@@ -2,70 +2,70 @@ thruster_manager:
   ros__parameters:
     flip_motors:
     - 1.0
-    - -1.0
-    - -1.0
     - 1.0
     - 1.0
-    - -1.0
     - 1.0
-    - -1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
     max_force: 60.0
     max_torque: 40.0
     motor0:
       heave: 0.0
       pitch: -0.0
-      roll: 0.0
-      surge: -0.353553
-      sway: -0.353553
-      yaw: -0.565112
+      roll: -0.0
+      surge: 0.3583
+      sway: 0.355076
+      yaw: -0.000705
     motor1:
+      heave: -0.285579
+      pitch: -0.001022
+      roll: -0.003426
+      surge: 0.07661
+      sway: -0.2567
+      yaw: 0.0
+    motor2:
       heave: -0.0
       pitch: 0.0
-      roll: 0.0
-      surge: -0.353553
-      sway: 0.353553
-      yaw: 0.565112
-    motor2:
-      heave: 0.25
-      pitch: -1.072271
-      roll: -0.943837
-      surge: 0.040854
-      sway: -0.03596
-      yaw: -0.0
-    motor3:
-      heave: 0.25
-      pitch: -1.072271
-      roll: 0.943837
-      surge: 0.040854
-      sway: 0.03596
-      yaw: 0.0
-    motor4:
-      heave: 0.25
-      pitch: 1.072271
-      roll: -0.943837
-      surge: -0.040854
-      sway: -0.03596
-      yaw: -0.0
-    motor5:
-      heave: -0.0
-      pitch: -0.0
       roll: -0.0
-      surge: 0.353553
-      sway: -0.353553
-      yaw: 0.565112
+      surge: 0.358307
+      sway: -0.352029
+      yaw: -0.000706
+    motor3:
+      heave: 0.281604
+      pitch: -0.001026
+      roll: 0.003445
+      surge: 0.076877
+      sway: 0.258134
+      yaw: -0.0
+    motor4:
+      heave: 0.0
+      pitch: 0.0
+      roll: 0.0
+      surge: 0.3488
+      sway: -0.355078
+      yaw: 0.000706
+    motor5:
+      heave: 0.218509
+      pitch: 0.001024
+      roll: -0.003433
+      surge: -0.076717
+      sway: -0.257234
+      yaw: -0.0
     motor6:
       heave: 0.0
       pitch: 0.0
       roll: 0.0
-      surge: 0.353553
-      sway: 0.353553
-      yaw: -0.565112
+      surge: -0.348807
+      sway: -0.352031
+      yaw: -0.000705
     motor7:
-      heave: 0.25
-      pitch: 1.072271
-      roll: 0.943837
-      surge: -0.040854
-      sway: 0.03596
+      heave: -0.214308
+      pitch: 0.00102
+      roll: 0.003438
+      surge: -0.07645
+      sway: 0.2576
       yaw: 0.0
     num_motors: 8
     rate_limit: 0.3

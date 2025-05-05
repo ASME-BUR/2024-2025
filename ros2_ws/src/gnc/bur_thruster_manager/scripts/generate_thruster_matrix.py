@@ -29,12 +29,12 @@ class CoordinateSystems(enum.IntEnum):
 
 if __name__ == '__main__':
     # Can calculate using whatever coordinate system (NED, NWU, ENU), just be consistent
-    coordinate_system_in = CoordinateSystems.NED
+    coordinate_system_in = CoordinateSystems.ENU
     coordinate_system_out = CoordinateSystems.ENU
     output_filename = 'motor_force_config_ENU.yaml'
 
     # Full path to the output file
-    output_path = os.path.join('src/bur_rov/bur_rov_control/thruster_manager/config', output_filename)
+    output_path = os.path.join(os.getcwd(), f'../config/{output_filename}')
 
     # Thruster locations relative to CoM (all units in mm)
     CoM = np.array([0, 0, 0]) / 1000    # Location of center of mass from vehicle origin
@@ -58,13 +58,13 @@ if __name__ == '__main__':
     c = np.cos(np.deg2rad(deg))
     thruster_orientations = np.array([
                                     [c, s, 0],
+                                    [0, 0, -1],
+                                    [c, -s, 0],
                                     [0, 0, 1],
                                     [c, -s, 0],
-                                    [0, 0, -1],
-                                    [c, -s, 0],
-                                    [0, 0, -1],
+                                    [0, 0, 1],
                                     [-c, -s, 0],
-                                    [0, 0, 1]
+                                    [0, 0, -1]
                                     ])
 
     CoM = CoordinateSystems.transform(CoM, coordinate_system_in=coordinate_system_in, coordinate_system_out=coordinate_system_out)
@@ -119,6 +119,6 @@ if __name__ == '__main__':
     try:
         with open(output_path, 'w') as file:
             yaml.dump(yaml_data, file, default_flow_style=False)
-        print("YAML file", output_filename, "has been generated.")
+        print("YAML file", output_path, "has been generated.")
     except Exception as e:
         print(f"Error generating YAML file: {e}")
