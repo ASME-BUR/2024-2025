@@ -27,11 +27,13 @@ To build all packages:
 4. Initialize Git submodules: `cd 2024-2025 && git submodule init && git submodule update`
 5. Build ROS packages: `cd ros2_ws && colcon build --symlink-install`
 
+*For more details: see `ros2_ws/INSTALLATION.md`*
+
 ## Run Instructions
 To run as an AUV, run:
 1. On Raspberry Pi (via SSH):
 
-   i. Launch ROS nodes: `ros2 launch bur_rov rov.launch.py`
+   i. Launch ROS nodes: `ros2 launch bur_launch rov.launch.py`
 3. On Jetson Orin (via SSH):
 
    i. Launch ZED node: `ros2 launch bur_vision zed.launch.py`
