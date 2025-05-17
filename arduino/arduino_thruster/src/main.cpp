@@ -130,12 +130,21 @@ void destroy_entities()
 }
 
 void setup()
-{
+{1: 6 -> 47
+2: 7 -> 45
+3: 8 -> 43
+4: 41
+39
+37
+35
+33
+
   // Initialize motors and outputs
   int motor_pin_begin = 4;
   for (int i = 0; i < MOTOR_COUNT; i++)
   {
-    motor[i].attach(i + motor_pin_begin);
+    // motor[i].attach(i + motor_pin_begin);
+    motor[i].attach(47 - 2 * i);
   }
   for (int i = 0; i < UTIL_COUNT; i++)
   {
