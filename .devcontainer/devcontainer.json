@@ -1,0 +1,8 @@
+{
+    "name": "bur-onboard",
+
+    "dockerComposeFile": "../docker/docker-compose.yml",
+    "service": "bur-onboard",
+    "workspaceFolder": "/root/2024-2025"
+
+}

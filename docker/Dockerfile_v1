@@ -1,0 +1,37 @@
+FROM osrf/ros:humble-desktop-full
+
+USER root
+
+WORKDIR /root
+
+# Install ROS dependencies
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y ros-${ROS_DISTRO}-control-toolbox \
+                       ros-${ROS_DISTRO}-robot-localization \
+                       ros-${ROS_DISTRO}-mavros \
+                       ros-${ROS_DISTRO}-navigation2 \
+                       ros-${ROS_DISTRO}-behaviortree-cpp \
+                       ros-${ROS_DISTRO}-image-common \
+                       python3-rosdep \
+                       python3-vcstool \
+                       libeigen3-dev \
+                       unzip
+
+# Install pigpio
+RUN wget https://github.com/joan2937/pigpio/archive/master.zip && \
+    unzip master.zip && \
+    cd pigpio-master && \
+    make && \
+    sudo make install && \
+    cd .. && \
+    rm -rf master.zip pigpio-master
+
+RUN rosdep update
+
+WORKDIR /root
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
+    echo "source ~/2024-2025/ros2_ws/install/setup.bash" >> ~/.bashrc
+
+CMD cd /root/2024-2025/ros2_ws
+ENTRYPOINT /bin/bash

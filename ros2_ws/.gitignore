@@ -2,6 +2,9 @@ install/
 build/
 log/
 .vscode/
+
 src/.vscode
+src/dependencies
+
 ros2bags/
 setup.zsh
