@@ -13,10 +13,13 @@ RUN apt-get update && \
                        ros-${ROS_DISTRO}-navigation2 \
                        ros-${ROS_DISTRO}-behaviortree-cpp \
                        ros-${ROS_DISTRO}-image-common \
+                       python3-pip \
                        python3-rosdep \
                        python3-vcstool \
                        libeigen3-dev \
                        unzip
+
+RUN python3 -m pip install vcs2l
 
 # Install pigpio
 RUN wget https://github.com/joan2937/pigpio/archive/master.zip && \
