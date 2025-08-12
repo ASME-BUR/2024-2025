@@ -11,7 +11,7 @@ JoyCommand::JoyCommand() : rclcpp::Node("joy_command")
     this->declare_parameter("pose_topic", "set_pose");
     this->declare_parameter("imu_topic", "imu");
     this->declare_parameter("multiplier", 0.5);
-    const std::map<std::string, int> &axis_mapping = {{"linear_x", 1}, {"linear_y", 0}, {"linear_z", 2}, {"angular_x", 3}, {"angular_y", 4}, {"angular_z", 5}};
+    const std::map<std::string, int> &axis_mapping = {{"linear_x", 1}, {"linear_y", 0}, {"linear_z", 4}, {"angular_x", 2}, {"angular_y", 5}, {"angular_z", 3}};
     this->declare_parameters("axis_mapping", axis_mapping);
     this->declare_parameter("using_ekf", false);
     this->declare_parameter("using_joy", true);
@@ -77,9 +77,12 @@ void JoyCommand::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
             output.target_vel.twist.linear.x = multiplier * msg->axes[abs(axis_mapping_.at("linear_x"))];
             output.target_vel.twist.linear.y = multiplier * msg->axes[abs(axis_mapping_.at("linear_y"))];
             output.target_vel.twist.linear.z = multiplier * msg->axes[abs(axis_mapping_.at("linear_z"))];
-            output.target_vel.twist.angular.x = multiplier * msg->axes[abs(axis_mapping_.at("angular_x"))];
-            output.target_vel.twist.angular.y = multiplier * -msg->axes[abs(axis_mapping_.at("angular_y"))];
+            // output.target_vel.twist.angular.x = multiplier * msg->axes[abs(axis_mapping_.at("angular_x"))];
+            // output.target_vel.twist.angular.y = multiplier * -msg->axes[abs(axis_mapping_.at("angular_y"))];
             output.target_vel.twist.angular.z = multiplier * msg->axes[abs(axis_mapping_.at("angular_z"))];
+
+            output.target_vel.twist.angular.x = 0;
+            output.target_vel.twist.angular.y = 0;
 
             // Debug
             joy_euler_msg.header.stamp = this->now();

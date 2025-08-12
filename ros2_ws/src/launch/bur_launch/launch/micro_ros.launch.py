@@ -23,13 +23,13 @@ def generate_launch_description():
                 package="micro_ros_agent",
                 executable="micro_ros_agent",
                 output='screen',
-                arguments=["serial", "-D", "/dev/ttyACM1", "-v", imu_verbose, "-b", "250000"]
+                arguments=["serial", "-D", "/dev/ttyACM1", "-v", imu_verbose, "-b", "115200"]
             )
     thruster = Node(
                 package="micro_ros_agent",
                 executable="micro_ros_agent",
                 output='screen',
-                arguments=["serial", "-D", "/dev/ttyACM0", "-v", thruster_verbose, "-b", "250000"]
+                arguments=["serial", "-D", "/dev/ttyACM0", "-v", thruster_verbose, "-b", "115200"]
             )
     
     return LaunchDescription([

@@ -10,8 +10,6 @@
 #include "nav_msgs/msg/odometry.hpp"
 using namespace std::chrono_literals;
 
-/* This example creates a subclass of Node and uses std::bind() to register a
- * member function as a callback from the timer. */
 
 class MinimalPublisher : public rclcpp::Node
 {
@@ -30,8 +28,8 @@ public:
 private:
     void timer_callback()
     {
-        if (depth < 0)
-        {
+        // if (depth < 0)
+        // {
             auto message = sensor_msgs::msg::Joy();
             des_pose.pose.pose.position.z = -1.5;
             publisher2_->publish(des_pose);
@@ -100,39 +98,17 @@ private:
                     message.buttons.push_back(buttons[i]);
                 }
             }
-            else if (delta_t < start_time + t1 + t2 + t3 + t4 + t5 && delta_t >= start_time + t1 + t2 + t3 + t4)
-            {
-                values[2] = -1.5;
-                values[0] = 1.0;
-                buttons[9] = 1;
-                message.buttons.clear();
-                for (size_t i = 0; i < buttons.size(); i++)
-                {
-                    message.buttons.push_back(buttons[i]);
-                }
-            }
-            // fire other torpedo
-            else if (delta_t < start_time + t1 + t2 + t3 + t4 + t5 + t6 && delta_t >= start_time + t1 + t2 + t3 + t4 + t5)
-            {
-                buttons[9] = 1;
-                buttons[7] = 1.0;
-                message.buttons.clear();
-                for (size_t i = 0; i < buttons.size(); i++)
-                {
-                    message.buttons.push_back(buttons[i]);
-                }
-            }
 
             for (size_t i = 0; i < values.size(); i++)
             {
                 message.axes.push_back(values[i]);
             }
             publisher_->publish(message);
-        }
-        else
-        {
-            init = this->now();
-        }
+        // }
+        // else
+        // {
+        //     init = this->now();
+        // }
     }
     void depth_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg)
     {

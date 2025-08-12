@@ -10,7 +10,7 @@ thruster_manager:
     - 1.0
     - 1.0
     max_force: 60.0
-    max_torque: 40.0
+    max_torque: 400.0
     motor0:
       heave: -0.0
       pitch: 0.0
@@ -20,8 +20,8 @@ thruster_manager:
       yaw: -0.000705
     motor1:
       heave: -0.285579
-      pitch: 0.003426
-      roll: -0.001022
+      pitch: 0.3426
+      roll: -0.1022
       surge: -0.0
       sway: -0.0
       yaw: -0.0
@@ -34,8 +34,8 @@ thruster_manager:
       yaw: -0.000706
     motor3:
       heave: 0.281604
-      pitch: -0.003445
-      roll: -0.001026
+      pitch: -0.3445
+      roll: -0.1026
       surge: -0.0
       sway: 0.0
       yaw: 0.0
@@ -48,8 +48,8 @@ thruster_manager:
       yaw: 0.000706
     motor5:
       heave: 0.218509
-      pitch: 0.003433
-      roll: 0.001024
+      pitch: 0.3433
+      roll: 0.1024
       surge: 0.0
       sway: -0.0
       yaw: -0.0
@@ -62,8 +62,8 @@ thruster_manager:
       yaw: -0.000705
     motor7:
       heave: -0.214308
-      pitch: -0.003438
-      roll: 0.00102
+      pitch: -0.3438
+      roll: 0.102
       surge: 0.0
       sway: -0.0
       yaw: -0.0

@@ -205,9 +205,9 @@ namespace controller
           geometry_msgs::msg::WrenchStamped controlEffort;
           controlEffort.header.stamp = this->now();
           controlEffort.header.frame_id = "base_link";
-          controlEffort.wrench.force.x = -linear_x.computeCommand(twist_setpoint.linear.x - twist_state.linear.x, dt);
-          controlEffort.wrench.force.y = -linear_y.computeCommand(twist_setpoint.linear.y - twist_state.linear.y, dt);
-          controlEffort.wrench.force.z = linear_z.computeCommand(pose_setpoint.position.z - pose_state.position.z, dt);
+          controlEffort.wrench.force.x = linear_x.computeCommand(twist_setpoint.linear.x - twist_state.linear.x, dt);
+          controlEffort.wrench.force.y = linear_y.computeCommand(twist_setpoint.linear.y - twist_state.linear.y, dt);
+          controlEffort.wrench.force.z = linear_z.computeCommand(twist_setpoint.linear.z - twist_state.linear.z, dt);
           std::cout << "state: " << state_angle.getX() << " " << state_angle.getY() << " " << state_angle.getZ() << std::endl;
           std::cout << "setpoint: " << setpoint_angle.getX() << " " << setpoint_angle.getY() << " " << setpoint_angle.getZ() << std::endl;
           // std::cout << "angle_wrap x: " << angle_wrap_pi(setpoint_angle.getX() - state_angle.getX()) << std::endl;
@@ -217,33 +217,37 @@ namespace controller
           // std::cout << twist_setpoint.linear.z << std::endl;
           // std::cout << twist_state.linear.z << std::endl;
 
-          if (yaw_hold)
-          {
-            // RCLCPP_INFO(this->get_logger(), "yaw hold");
-            controlEffort.wrench.torque.z = angular_z.computeCommand(angle_wrap_pi(setpoint_angle.getZ() - state_angle.getZ()), dt);
-          }
-          else
-          {
-            controlEffort.wrench.torque.z = angular_z.computeCommand(twist_setpoint.angular.z - twist_state.angular.z, dt);
-          }
+          controlEffort.wrench.torque.x = angular_x.computeCommand(twist_setpoint.angular.x - twist_state.angular.x, dt);
+          controlEffort.wrench.torque.y = angular_y.computeCommand(twist_setpoint.angular.y - twist_state.angular.y, dt);
+          controlEffort.wrench.torque.z = 5 * angular_z.computeCommand(twist_setpoint.angular.z - twist_state.angular.z, dt);
 
-          if (roll_hold)
-          {
-            controlEffort.wrench.torque.x = angular_x.computeCommand(angle_wrap_pi(setpoint_angle.getX() - state_angle.getX()), dt);
-          }
-          else
-          {
-            controlEffort.wrench.torque.x = angular_x.computeCommand(twist_setpoint.angular.x - twist_state.angular.x, dt);
-          }
+          // if (yaw_hold)
+          // {
+          //   // RCLCPP_INFO(this->get_logger(), "yaw hold");
+          //   controlEffort.wrench.torque.z = angular_z.computeCommand(angle_wrap_pi(setpoint_angle.getZ() - state_angle.getZ()), dt);
+          // }
+          // else
+          // {
+          //   controlEffort.wrench.torque.z = angular_z.computeCommand(twist_setpoint.angular.z - twist_state.angular.z, dt);
+          // }
 
-          if (pitch_hold)
-          {
-            controlEffort.wrench.torque.y = angular_y.computeCommand(angle_wrap_pi(setpoint_angle.getY() - state_angle.getY()), dt);
-          }
-          else
-          {
-            controlEffort.wrench.torque.y = angular_y.computeCommand(twist_setpoint.angular.y - twist_state.angular.y, dt);
-          }
+          // if (roll_hold)
+          // {
+          //   controlEffort.wrench.torque.x = angular_x.computeCommand(angle_wrap_pi(setpoint_angle.getX() - state_angle.getX()), dt);
+          // }
+          // else
+          // {
+          //   controlEffort.wrench.torque.x = angular_x.computeCommand(twist_setpoint.angular.x - twist_state.angular.x, dt);
+          // }
+
+          // if (pitch_hold)
+          // {
+          //   controlEffort.wrench.torque.y = angular_y.computeCommand(angle_wrap_pi(setpoint_angle.getY() - state_angle.getY()), dt);
+          // }
+          // else
+          // {
+          //   controlEffort.wrench.torque.y = angular_y.computeCommand(twist_setpoint.angular.y - twist_state.angular.y, dt);
+          // }
 
           pubControlEffort->publish(controlEffort);
         }

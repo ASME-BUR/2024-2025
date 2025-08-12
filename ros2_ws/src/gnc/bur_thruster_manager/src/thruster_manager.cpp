@@ -75,7 +75,7 @@ void Thruster_manager::setVariables()
         motors[i]["heave"] = this->get_parameter(string(motor_names[i] + ".heave")).as_double();
         motors[i]["roll"] = this->get_parameter(string(motor_names[i] + ".roll")).as_double();
         motors[i]["pitch"] = this->get_parameter(string(motor_names[i] + ".pitch")).as_double();
-        motors[i]["yaw"] = this->get_parameter(string(motor_names[i] + ".yaw")).as_double();
+        motors[i]["yaw"] = 30 * this->get_parameter(string(motor_names[i] + ".yaw")).as_double();
     }
     flip_motors = this->get_parameter("flip_motors").as_double_array();
 }
@@ -98,7 +98,7 @@ void Thruster_manager::cmd_Callback(const bur_msgs::msg::Command::SharedPtr msg)
         this->output.thrusters.clear();
         for (size_t i = 0; i < 8; ++i)
         {
-            this->output.thrusters.push_back(0.4 * output.buttons[i]);
+            this->output.thrusters.push_back(0.2 * output.buttons[i]);
         }
     }
     // runNode();

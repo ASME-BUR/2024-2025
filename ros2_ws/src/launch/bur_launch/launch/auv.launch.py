@@ -45,11 +45,11 @@ def generate_launch_description():
         ])
     )
 
-    # open_loop = Node(
-    #     package="bur_rov",
-    #     executable="open_loop",
-    #     name="open_loop",
-    # )
+    open_loop = Node(
+        package="bur_rov",
+        executable="open_loop",
+        name="open_loop",
+    )
 
 
     return LaunchDescription([
@@ -58,7 +58,7 @@ def generate_launch_description():
         # depth_sensor,
         # camera,
         # joy,
-        # open_loop,
-        # manager,
-        # arduino
+        open_loop,
+        manager,
+        arduino
     ])

@@ -21,7 +21,7 @@ def generate_launch_description():
                 package="bur_rov",
                 executable="joy_command",
                 name="joy_command",
-                parameters=[],
+                parameters=[{'using_joy': True}],
             ),
         ]
     )
