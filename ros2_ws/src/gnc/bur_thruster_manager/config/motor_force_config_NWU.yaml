@@ -2,14 +2,14 @@ thruster_manager:
   ros__parameters:
     flip_motors:
     - 1.0
+    - 1.1
+    - 1.0
+    - 1.4
+    - 1.0
+    - 0.9
     - 1.0
     - 1.0
-    - 1.0
-    - 1.0
-    - 1.0
-    - 1.0
-    - 1.0
-    max_force: 60.0
+    max_force: 100.0
     max_torque: 400.0
     motor0:
       heave: -0.0

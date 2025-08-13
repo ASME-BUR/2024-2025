@@ -28,6 +28,14 @@ public:
 private:
     void timer_callback()
     {
+
+        /*
+            0: left joystick left/right (left/right)
+            1: left joystick up/down (forward/back)
+            3: right joystick left/right (yaw left/right)
+            4: right joystick up/down (robot up/down)
+        */
+
         // if (depth < 0)
         // {
             auto message = sensor_msgs::msg::Joy();
@@ -41,67 +49,50 @@ private:
             message.header.stamp.sec = delta_t;
             message.buttons.clear();
             std::vector<int> buttons(13, 0);
-            for (size_t i = 0; i < buttons.size(); i++)
-            {
-                message.buttons.push_back(buttons[i]);
-            }
-            float start_time = 20.0;
+            float start_time = 5.0;
             float t1 = 5;
             float t2 = 13;
             float t3 = 23;
             float t4 = 15;
             float t5 = 15;
             float t6 = 5;
+
+            // Descend
             if (delta_t < start_time + t1 && delta_t >= start_time)
             {
-                values[2] = -1.5;
-                message.buttons.clear();
+                values[1] = 1.0;
+                values[4] = 0.05;
                 buttons[9] = 1;
-                for (size_t i = 0; i < buttons.size(); i++)
-                {
-                    message.buttons.push_back(buttons[i]);
-                }
             }
             // go forward
             else if (delta_t < start_time + t1 + t2 && delta_t >= start_time + t1)
             {
-                values[2] = -1.5;
-                values[0] = 1.0;
+                values[1] = 1.0;
+                values[4] = -0.15;
                 buttons[9] = 1;
-                message.buttons.clear();
-                for (size_t i = 0; i < buttons.size(); i++)
-                {
-                    message.buttons.push_back(buttons[i]);
-                }
-            }
+            }            
             // yaw
             else if (delta_t < start_time + t1 + t2 + t3 && delta_t >= start_time + t1 + t2)
             {
-                values[5] = -1.0;
-                values[0] = 1.0;
+                values[3] = -0.5;
+                values[4] = -0.05;
                 buttons[9] = 1;
-                message.buttons.clear();
-                for (size_t i = 0; i < buttons.size(); i++)
-                {
-                    message.buttons.push_back(buttons[i]);
-                }
             }
             // roll and fire torpedo
             else if (delta_t < start_time + t1 + t2 + t3 + t4 && delta_t >= start_time + t1 + t2 + t3)
             {
-                values[3] = 5.0;
+                // values[3] = 5.0;
                 buttons[9] = 1;
                 buttons[4] = 1.0;
-                message.buttons.clear();
-                for (size_t i = 0; i < buttons.size(); i++)
-                {
-                    message.buttons.push_back(buttons[i]);
-                }
             }
 
             for (size_t i = 0; i < values.size(); i++)
             {
                 message.axes.push_back(values[i]);
+            }
+            for (size_t i = 0; i < buttons.size(); i++)
+            {
+                message.buttons.push_back(buttons[i]);
             }
             publisher_->publish(message);
         // }
@@ -110,10 +101,12 @@ private:
         //     init = this->now();
         // }
     }
+
     void depth_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg)
     {
         depth = msg->pose.pose.position.z;
     }
+
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr publisher_;
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publisher2_;
@@ -122,6 +115,7 @@ private:
     double depth = 1000;
     rclcpp::Time init;
     nav_msgs::msg::Odometry des_pose;
+
 };
 
 int main(int argc, char *argv[])

@@ -93,12 +93,11 @@ void Thruster_manager::cmd_Callback(const bur_msgs::msg::Command::SharedPtr msg)
         this->output.buttons.push_back(msg->buttons[i]);
     }
 
-    if (this->test_mode)
-    {
+    if (this->test_mode) {
         this->output.thrusters.clear();
         for (size_t i = 0; i < 8; ++i)
         {
-            this->output.thrusters.push_back(0.2 * output.buttons[i]);
+            this->output.thrusters.push_back(0.5 * output.buttons[i]);
         }
     }
     // runNode();

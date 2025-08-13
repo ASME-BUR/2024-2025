@@ -219,7 +219,7 @@ namespace controller
 
           controlEffort.wrench.torque.x = angular_x.computeCommand(twist_setpoint.angular.x - twist_state.angular.x, dt);
           controlEffort.wrench.torque.y = angular_y.computeCommand(twist_setpoint.angular.y - twist_state.angular.y, dt);
-          controlEffort.wrench.torque.z = 5 * angular_z.computeCommand(twist_setpoint.angular.z - twist_state.angular.z, dt);
+          controlEffort.wrench.torque.z = angular_z.computeCommand(twist_setpoint.angular.z - twist_state.angular.z, dt);
 
           // if (yaw_hold)
           // {

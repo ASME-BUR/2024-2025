@@ -45,10 +45,16 @@ def generate_launch_description():
         ])
     )
 
-    open_loop = Node(
-        package="bur_rov",
-        executable="open_loop",
-        name="open_loop",
+    # open_loop = Node(
+    #     package="bur_rov",
+    #     executable="open_loop",
+    #     name="open_loop",
+    # )
+    open_loop = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('bur_autonomy'), 'launch'),
+            '/open_loop.launch.py'
+        ])
     )
 
 
@@ -59,6 +65,12 @@ def generate_launch_description():
         # camera,
         # joy,
         open_loop,
-        manager,
-        arduino
+        # manager,
+        arduino,
+        Node(
+            package="bur_rov",
+            executable="joy_command",
+            name="joy_command",
+            parameters=[{'using_joy': True}],
+        )
     ])

@@ -1,0 +1,22 @@
+ <root BTCPP_format="4" >
+    <BehaviorTree ID="MainTree">
+        <SequenceWithMemory>
+            <TimedJoyNode enable="0" 
+                          duration="5.0" />
+
+            <TimedJoyNode enable="1" 
+                          duration="5.0" 
+                          linear_z="-0.25" />
+
+            <TimedJoyNode enable="1" 
+                          duration="25.0" 
+                          linear_x="2.0" 
+                          linear_z="-0.1"
+                          angular_y="-0.2"
+                          angular_z="-0.2" />
+
+            <TimedJoyNode enable="0" 
+                          duration="1.0" />
+        </SequenceWithMemory>
+    </BehaviorTree>
+ </root>
