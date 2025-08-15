@@ -9,6 +9,7 @@ Thruster_manager::Thruster_manager() : rclcpp::Node("thruster_manager")
     // Parameters
     this->declare_parameter("wrench_sub_topic", "wrench_cmd");
     this->declare_parameter("cmd_sub_topic", "cmd");
+    this->declare_parameter("imu_sub_topic", "imu");
     this->declare_parameter("thrust_cmd_pub_topic", "thrust_cmd");
     this->declare_parameter("thrust_max_fwd", 5.25);
     this->declare_parameter("thrust_max_bwd", 4.1);

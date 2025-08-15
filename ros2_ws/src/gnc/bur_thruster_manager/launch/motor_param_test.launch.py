@@ -20,6 +20,7 @@ def generate_launch_description():
         parameters = [config,
                       {"wrench_sub_topic": "control_effort"},
                       {"cmd_sub_topic": "command"},
+                      {"imu_sub_topic": "imu"},
                       {"thrust_cmd_pub_topic": "thruster_command"},
                       {"test_mode": False}
                       ]
