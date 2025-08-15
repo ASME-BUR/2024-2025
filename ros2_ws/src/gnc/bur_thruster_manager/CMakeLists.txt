@@ -16,6 +16,9 @@ find_package(ament_cmake REQUIRED)
 # manually. find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 # find_package(eigen3 REQUIRED)
 
 find_package(bur_msgs REQUIRED)
@@ -24,7 +27,7 @@ include_directories(include/${PROJECT_NAME} include/utilities)
 
 add_executable(thruster_manager src/thruster_manager.cpp src/utilities/common_functions.cpp)
 # ament_target_dependencies(thruster_manager rclcpp geometry_msgs eigen3 bur_rov_msgs)
-ament_target_dependencies(thruster_manager rclcpp geometry_msgs bur_msgs)
+ament_target_dependencies(thruster_manager rclcpp geometry_msgs bur_msgs sensor_msgs tf2 tf2_geometry_msgs)
 
 target_include_directories(
   thruster_manager PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"

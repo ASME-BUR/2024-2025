@@ -30,6 +30,8 @@ Thruster_manager::Thruster_manager() : rclcpp::Node("thruster_manager")
 
     wrench_sub = this->create_subscription<geometry_msgs::msg::WrenchStamped>(
         this->get_parameter("wrench_sub_topic").as_string(), 1, std::bind(&Thruster_manager::wrench_Callback, this, _1));
+    imu_sub = this->create_subscription<sensor_msgs::msg::Imu>(
+        this->get_parameter("imu_sub_topic").as_string(), 1, std::bind(&Thruster_manager::imu_Callback, this, _1));
     cmd_sub = this->create_subscription<bur_msgs::msg::Command>(
         this->get_parameter("cmd_sub_topic").as_string(), 1, std::bind(&Thruster_manager::cmd_Callback, this, _1));
     cmd_pub = this->create_publisher<bur_msgs::msg::ThrusterCommand>(
@@ -103,6 +105,11 @@ void Thruster_manager::cmd_Callback(const bur_msgs::msg::Command::SharedPtr msg)
     // runNode();
 }
 
+void Thruster_manager::imu_Callback(const sensor_msgs::msg::Imu::SharedPtr msg)
+{
+    this->transform_.transform.rotation = msg->orientation;
+}
+
 void Thruster_manager::wrench_Callback(const geometry_msgs::msg::WrenchStamped::SharedPtr msg)
 {
     pwr[0] = msg->wrench.force.x;  // surge
@@ -111,6 +118,38 @@ void Thruster_manager::wrench_Callback(const geometry_msgs::msg::WrenchStamped::
     pwr[3] = msg->wrench.torque.x; // roll
     pwr[4] = msg->wrench.torque.y; // pitch
     pwr[5] = msg->wrench.torque.z; // yaw
+
+    geometry_msgs::msg::PoseStamped pose;
+    pose.pose.position.x = msg->wrench.force.x;
+    pose.pose.position.y = msg->wrench.force.y;
+    pose.pose.position.z = msg->wrench.force.z;
+
+    tf2::Quaternion force_quat;
+    force_quat.setRPY(msg->wrench.torque.x, msg->wrench.torque.y, msg->wrench.torque.z);
+    pose.pose.orientation = tf2::toMsg(force_quat);
+
+    tf2::Transform transform;
+    tf2::fromMsg(this->transform_.transform, transform);
+    geometry_msgs::msg::Transform inverted_transform_msg;
+    auto inv = tf2::toMsg(transform.inverse());
+    geometry_msgs::msg::TransformStamped inv_stamped;
+    inv_stamped.transform = inv;
+
+    tf2::doTransform(pose, pose, inv_stamped);
+    pwr[0] = pose.pose.position.x;
+    pwr[1] = pose.pose.position.y;
+    pwr[2] = pose.pose.position.z;
+
+    tf2::Quaternion new_quat;
+    tf2::fromMsg(pose.pose.orientation, new_quat);
+    tf2::Matrix3x3 m(new_quat);
+
+    double roll, pitch, yaw;
+    m.getRPY(roll, pitch, yaw);
+    pwr[3] = roll;
+    pwr[4] = pitch;
+    pwr[5] = yaw;
+
     runNode();
 }
 

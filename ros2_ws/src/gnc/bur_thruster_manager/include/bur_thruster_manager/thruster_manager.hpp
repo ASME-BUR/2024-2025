@@ -29,7 +29,13 @@
 
 #include "bur_msgs/msg/thruster_command.hpp"
 #include "bur_msgs/msg/command.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "geometry_msgs/msg/transform.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
 #include "geometry_msgs/msg/wrench_stamped.hpp"
+#include "sensor_msgs/msg/imu.hpp"
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include "utilities/common_functions.hpp"
 // #include <eigen3/Dense>
 // #include <eigen3/Sparse>
@@ -67,10 +73,12 @@ private:
     void allocate_generic_motors(std::map<std::string, double> &des_forces, std::vector<double> &des_motor_thrusts);
     double rateLimitMotorCommand(double new_command, double last_command) const;
     void wrench_Callback(const geometry_msgs::msg::WrenchStamped::SharedPtr msg);
+    void imu_Callback(const sensor_msgs::msg::Imu::SharedPtr msg);
     void cmd_Callback(const bur_msgs::msg::Command::SharedPtr msg);
     // Ros stuff
     rclcpp::Subscription<geometry_msgs::msg::WrenchStamped>::SharedPtr wrench_sub;
     rclcpp::Subscription<bur_msgs::msg::Command>::SharedPtr cmd_sub;
+    rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub;
     rclcpp::Publisher<bur_msgs::msg::ThrusterCommand>::SharedPtr cmd_pub;
     bur_msgs::msg::ThrusterCommand output;
 
@@ -84,6 +92,8 @@ private:
     array<double, 6> pwr_limit = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
     bool enable_priorities = true;
     double max_step_per_loop = 0;
+
+    geometry_msgs::msg::TransformStamped transform_;
 
     double MOTOR_FORWARD_BACKWARD_RATIO; // BlueROV T200 produce 5.25kgf forward, 4.1 kgf backwards, at 16V
     double THRUST_MAX_FWD;               // kg-f @ 16V
