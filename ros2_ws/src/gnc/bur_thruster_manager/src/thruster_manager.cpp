@@ -242,6 +242,11 @@ void Thruster_manager::runNode()
         }
     }
 
+    if (this->output.buttons.empty()) {
+        this->output.buttons.insert(this->output.buttons.begin(), 8, 0);
+        this->output.buttons.push_back(1);
+    }
+
     cmd_pub->publish(this->output);
 } // End of run node
 
